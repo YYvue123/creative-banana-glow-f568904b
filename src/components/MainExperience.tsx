@@ -87,12 +87,14 @@ const MainExperience = ({ lang }: { lang: Lang }) => {
             </label>
             <Select value={selectedModelId} onValueChange={setSelectedModelId}>
               <SelectTrigger className="w-full border-border bg-background">
-                <SelectValue />
+                <SelectValue>
+                  {modelLocales[currentModel.nameKey][lang]}
+                </SelectValue>
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent align="start">
                 {modelConfigs.map((m) => (
-                  <SelectItem key={m.id} value={m.id}>
-                    <div className="flex flex-col">
+                  <SelectItem key={m.id} value={m.id} className="items-start">
+                    <div className="flex flex-col items-start text-left">
                       <span className="font-medium">{modelLocales[m.nameKey][lang]}</span>
                       <span className="text-xs text-muted-foreground">{modelLocales[m.descKey][lang]}</span>
                     </div>
