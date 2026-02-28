@@ -13,12 +13,21 @@ import sceneMulti1 from '@/assets/scene-multiangle-1.jpg';
 import sceneText1 from '@/assets/scene-text-1.jpg';
 import sceneConsist1 from '@/assets/scene-consistency-1.jpg';
 
-const scenarioImageMap: Record<string, string> = {
-  search: sceneSearch1,
-  multiangle: sceneMulti1,
-  text: sceneText1,
-  consistency: sceneConsist1,
+/* ── MOCK DATA ── */
+const MOCK_DATA = {
+  scenarioImageMap: {
+    search: sceneSearch1,
+    multiangle: sceneMulti1,
+    text: sceneText1,
+    consistency: sceneConsist1,
+  } as Record<string, string>,
+
+  /** Simulated generation delay (ms) */
+  mockGenerateDelay: 3000,
 };
+
+/* ── State Machine ── */
+export type ExperienceUIState = 'idle' | 'generating' | 'success' | 'error';
 
 /* ── Shared state context ── */
 interface ExperienceState {
@@ -31,7 +40,7 @@ interface ExperienceState {
   fieldValues: Record<string, string | number>;
   setFieldValue: (key: string, val: string | number) => void;
   getFieldValue: (key: string, defaultVal?: string | number) => string | number;
-  isGenerating: boolean;
+  uiState: ExperienceUIState;
   generatedImage: string | null;
   activeTab: string;
   handleTabChange: (tab: string) => void;
@@ -65,7 +74,7 @@ export const ExperienceProvider = ({ lang, children }: { lang: Lang; children: R
   const [refImage, setRefImage] = useState<string | null>(null);
   const [prompt, setPrompt] = useState('');
   const [fieldValues, setFieldValues] = useState<Record<string, string | number>>({});
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [uiState, setUiState] = useState<ExperienceUIState>('idle');
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState(scenarios[0].id);
   const fileInputRef = useRef<HTMLInputElement>(null!);
@@ -84,22 +93,25 @@ export const ExperienceProvider = ({ lang, children }: { lang: Lang; children: R
   const handleTabChange = (tabId: string) => {
     setActiveTab(tabId);
     setGeneratedImage(null);
-    setIsGenerating(false);
+    setUiState('idle');
   };
 
-  const handleGenerate = useCallback(() => {
-    setIsGenerating(true);
+  const handleGenerate = useCallback(async () => {
+    // TODO: [Generation Squad] Connect to API by Dev
+    // Replace mock setTimeout with actual API call:
+    //   POST /api/generate { model, prompt, refImage, fieldValues, activeTab }
+    setUiState('generating');
     setGeneratedImage(null);
     setTimeout(() => {
-      setGeneratedImage(scenarioImageMap[activeTab] || sceneSearch1);
-      setIsGenerating(false);
-    }, 3000);
+      setGeneratedImage(MOCK_DATA.scenarioImageMap[activeTab] || sceneSearch1);
+      setUiState('success');
+    }, MOCK_DATA.mockGenerateDelay);
   }, [activeTab]);
 
   return (
     <ExperienceContext.Provider value={{
       selectedModelId, setSelectedModelId, refImage, setRefImage, prompt, setPrompt,
-      fieldValues, setFieldValue, getFieldValue, isGenerating, generatedImage,
+      fieldValues, setFieldValue, getFieldValue, uiState, generatedImage,
       activeTab, handleTabChange, handleGenerate, handleFileUpload, handleFileChange,
       fileInputRef, currentModel, lang,
     }}>
@@ -118,9 +130,11 @@ const useExperience = () => {
 export const ConfigPanel = () => {
   const {
     lang, selectedModelId, setSelectedModelId, currentModel, refImage, setRefImage,
-    getFieldValue, setFieldValue, prompt, setPrompt, isGenerating, handleGenerate,
+    getFieldValue, setFieldValue, prompt, setPrompt, uiState, handleGenerate,
     handleFileUpload, handleFileChange, fileInputRef,
   } = useExperience();
+
+  const isGenerating = uiState === 'generating';
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -130,6 +144,13 @@ export const ConfigPanel = () => {
       target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }, 100);
   };
+
+  /** @slot Upload reference image to storage */
+  const handleUploadToStorage = async (_file: File) => {
+    // TODO: [Storage Squad] Connect to API by Dev
+    // Upload file to cloud storage, return URL
+  };
+  void handleUploadToStorage;
 
   return (
     <motion.div
@@ -281,7 +302,9 @@ export const ConfigPanel = () => {
 
 /* ── Scenario Showcase (right side) ── */
 export const ScenarioShowcase = () => {
-  const { lang, activeTab, handleTabChange, isGenerating, generatedImage } = useExperience();
+  const { lang, activeTab, handleTabChange, uiState, generatedImage } = useExperience();
+
+  const isGenerating = uiState === 'generating';
 
   return (
     <motion.div
@@ -306,7 +329,7 @@ export const ScenarioShowcase = () => {
         )}
 
         {scenarios.map((s) => {
-          const imgSrc = scenarioImageMap[s.id];
+          const imgSrc = MOCK_DATA.scenarioImageMap[s.id];
           const altText = scenarioLocales[s.images[0]?.altKey]?.[lang] || '';
           return (
             <TabsContent key={s.id} value={s.id} className="mt-0">
