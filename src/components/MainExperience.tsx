@@ -1,5 +1,7 @@
 import { useRef, useState, useCallback, createContext, useContext } from 'react';
 import { Lang, locales, modelConfigs, modelLocales, scenarios, scenarioLocales, type ModelConfig } from '@/lib/locales';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
@@ -97,16 +99,40 @@ export const ExperienceProvider = ({ lang, children }: { lang: Lang; children: R
   };
 
   const handleGenerate = useCallback(async () => {
-    // TODO: [Generation Squad] Connect to API by Dev
-    // Replace mock setTimeout with actual API call:
-    //   POST /api/generate { model, prompt, refImage, fieldValues, activeTab }
     setUiState('generating');
     setGeneratedImage(null);
-    setTimeout(() => {
-      setGeneratedImage(MOCK_DATA.scenarioImageMap[activeTab] || sceneSearch1);
-      setUiState('success');
-    }, MOCK_DATA.mockGenerateDelay);
-  }, [activeTab]);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-image', {
+        body: {
+          prompt: prompt || scenarioLocales[`scene_${activeTab}_1_prompt`]?.zh || 'Generate a beautiful 4K image',
+          refImage: refImage,
+        },
+      });
+
+      if (error) {
+        console.error('Edge function error:', error);
+        toast.error('生成失败，请稍后重试');
+        setUiState('idle');
+        return;
+      }
+
+      if (data?.imageUrl) {
+        setGeneratedImage(data.imageUrl);
+        setUiState('success');
+      } else {
+        // Fallback to scenario image if no image returned
+        console.warn('No image in response, using fallback. Response:', data);
+        toast.info('模型未返回图片，已使用示例图片');
+        setGeneratedImage(MOCK_DATA.scenarioImageMap[activeTab] || sceneSearch1);
+        setUiState('success');
+      }
+    } catch (err) {
+      console.error('Generate error:', err);
+      toast.error('生成请求失败');
+      setUiState('idle');
+    }
+  }, [activeTab, prompt, refImage]);
 
   return (
     <ExperienceContext.Provider value={{
