@@ -284,13 +284,13 @@ export const featureCards: { icon: string; status: string; nameKey: string; desc
 ];
 
 export const featureLocales: Record<string, Record<Lang, string>> = {
-  feat_api: { en: 'API Integration', zh: 'Nano Banana 2：免费高速与专业级 4K 图像生成能力', ko: 'API 통합', ja: 'API統合', es: 'Integración API' },
+  feat_api: { en: 'Free, Fast & Professional 4K Image Generation', zh: '免费高速与专业级 4K 图像生成能力', ko: '무료, 고속, 전문가급 4K 이미지 생성', ja: '無料・高速・プロ品質の4K画像生成', es: 'Generación 4K gratuita, rápida y profesional' },
   feat_api_desc: {
-    en: 'Nano Banana 2 offers seamless RESTful API integration for automated image generation workflows.',
+    en: 'Nano Banana 2, powered by Gemini 3.1 Flash, lets you rapidly create, edit, and blend 4K images. Enjoy precise text rendering, multi-image editing, and professional-grade capabilities — all for free.',
     zh: 'Nano Banana 2 基于 Gemini 3.1 Flash，让您快速创建、编辑和融合 4K 图像。精准文字渲染、多图编辑，免费享受专业级能力。',
-    ko: 'Nano Banana 2는 자동화된 이미지 생성 워크플로를 위한 원활한 RESTful API 통합을 제공합니다.',
-    ja: 'Nano Banana 2は、自動画像生成ワークフローのためのシームレスなRESTful API統合を提供します。',
-    es: 'Nano Banana 2 ofrece integración API RESTful sin interrupciones para flujos de trabajo automatizados.',
+    ko: 'Gemini 3.1 Flash 기반의 Nano Banana 2로 4K 이미지를 빠르게 생성, 편집, 블렌딩하세요. 정밀한 텍스트 렌더링, 다중 이미지 편집, 전문가급 기능을 무료로 즐기세요.',
+    ja: 'Gemini 3.1 Flashを搭載したNano Banana 2で、4K画像の作成・編集・ブレンドを高速に。正確なテキストレンダリング、マルチ画像編集、プロ品質の機能をすべて無料で。',
+    es: 'Nano Banana 2, con Gemini 3.1 Flash, le permite crear, editar y fusionar imágenes 4K rápidamente. Renderizado de texto preciso, edición multi-imagen y capacidades profesionales, todo gratis.',
   },
   feat_multi: { en: 'Stable Characters, Fast Speed, Great Value', zh: '角色稳定、速度快、性价比高', ko: '캐릭터 안정성, 빠른 속도, 높은 가성비', ja: 'キャラクター安定性・高速・コスパ', es: 'Personajes estables, rápido y económico' },
   feat_multi_desc: {
