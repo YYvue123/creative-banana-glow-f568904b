@@ -212,7 +212,7 @@ export const ConfigPanel = () => {
 
           if (field.type === 'select' && field.options) {
             return (
-              <div key={field.labelKey}>
+              <div key={field.labelKey} onClick={handleFieldFocus}>
                 <label className="mb-1.5 block text-sm font-medium text-foreground">
                   {locales[field.labelKey]?.[lang] || field.labelKey}
                 </label>
