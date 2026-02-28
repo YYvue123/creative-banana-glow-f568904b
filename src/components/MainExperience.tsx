@@ -221,7 +221,7 @@ const MainExperience = ({ lang }: { lang: Lang }) => {
           initial={{ opacity: 0, x: 20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          className="w-full lg:w-[65%]"
+          className="w-full lg:w-[65%] flex flex-col justify-center"
         >
           <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
             {!isGenerating && !generatedImage && (
