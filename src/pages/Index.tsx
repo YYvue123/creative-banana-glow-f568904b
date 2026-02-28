@@ -23,8 +23,22 @@ const Index = () => {
         <LanguageSelector lang={lang} onChange={setLang} />
       </header>
 
-      <HeroSection lang={lang} />
-      <MainExperience lang={lang} />
+      {/* Two-column layout: config panel on the left at H1 level */}
+      <div className="container mx-auto px-4 pt-20 md:pt-28">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
+          {/* Left: Sticky Config Panel */}
+          <div className="w-full lg:w-[35%] lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto">
+            <MainExperience lang={lang} mode="config" />
+          </div>
+
+          {/* Right: Hero + Scenario + rest */}
+          <div className="w-full lg:w-[65%]">
+            <HeroSection lang={lang} />
+            <MainExperience lang={lang} mode="showcase" />
+          </div>
+        </div>
+      </div>
+
       <FeatureGrid lang={lang} />
       <FAQSection lang={lang} />
       <FooterSupport lang={lang} />
