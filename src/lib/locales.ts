@@ -80,7 +80,7 @@ export const locales: Record<string, Record<Lang, string>> = {
 /* ── Model configuration ── */
 
 export interface ModelFieldConfig {
-  type: 'upload' | 'select' | 'number';
+  type: 'upload' | 'select' | 'number' | 'radio';
   labelKey: string;
   options?: string[];
   default?: string | number;
