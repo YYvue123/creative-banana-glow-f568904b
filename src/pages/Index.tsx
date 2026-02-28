@@ -46,7 +46,7 @@ const Index = () => {
       <HowItWorks lang={lang} />
       <Testimonials lang={lang} />
       <FAQSection lang={lang} />
-      <FooterSupport lang={lang} />
+      
     </div>
   );
 };
