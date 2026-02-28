@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Lang } from '@/lib/locales';
 import LanguageSelector from '@/components/LanguageSelector';
 import HeroSection from '@/components/HeroSection';
-import MainExperience from '@/components/MainExperience';
+import { ExperienceProvider, ConfigPanel, ScenarioShowcase } from '@/components/MainExperience';
 import FeatureGrid from '@/components/FeatureGrid';
 import FAQSection from '@/components/FAQSection';
 import FooterSupport from '@/components/FooterSupport';
@@ -23,8 +23,23 @@ const Index = () => {
         <LanguageSelector lang={lang} onChange={setLang} />
       </header>
 
-      <HeroSection lang={lang} />
-      <MainExperience lang={lang} />
+      <ExperienceProvider lang={lang}>
+        <div className="container mx-auto px-4 pt-20 md:pt-28">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
+            {/* Left: Sticky Config Panel — aligned with H1 */}
+            <div className="w-full lg:w-[35%] lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto">
+              <ConfigPanel />
+            </div>
+
+            {/* Right: Hero title + Scenario showcase */}
+            <div className="w-full lg:w-[65%] space-y-8">
+              <HeroSection lang={lang} />
+              <ScenarioShowcase />
+            </div>
+          </div>
+        </div>
+      </ExperienceProvider>
+
       <FeatureGrid lang={lang} />
       <FAQSection lang={lang} />
       <FooterSupport lang={lang} />
