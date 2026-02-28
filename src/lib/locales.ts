@@ -60,6 +60,9 @@ export const locales: Record<string, Record<Lang, string>> = {
   contactSupport: {
     en: 'Contact Support', zh: '联系支持', ko: '지원 문의', ja: 'サポートに連絡', es: 'Contactar soporte',
   },
+  generateNow: {
+    en: 'Generate Now →', zh: '立即生成 →', ko: '지금 생성 →', ja: '今すぐ生成 →', es: 'Generar ahora →',
+  },
 };
 
 export const casePrompts: Record<Lang, string[]> = {
