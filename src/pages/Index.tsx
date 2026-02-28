@@ -5,6 +5,7 @@ import HeroSection from '@/components/HeroSection';
 import { ExperienceProvider, ConfigPanel, ScenarioShowcase } from '@/components/MainExperience';
 import FeatureGrid from '@/components/FeatureGrid';
 import FAQSection from '@/components/FAQSection';
+import HowItWorks from '@/components/HowItWorks';
 import FooterSupport from '@/components/FooterSupport';
 
 const Index = () => {
@@ -41,6 +42,7 @@ const Index = () => {
       </ExperienceProvider>
 
       <FeatureGrid lang={lang} />
+      <HowItWorks lang={lang} />
       <FAQSection lang={lang} />
       <FooterSupport lang={lang} />
     </div>
