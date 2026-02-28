@@ -107,6 +107,15 @@ export const ConfigPanel = () => {
     handleFileUpload, handleFileChange, fileInputRef,
   } = useExperience();
 
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const handleFieldFocus = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.currentTarget;
+    setTimeout(() => {
+      target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
@@ -115,7 +124,7 @@ export const ConfigPanel = () => {
       className="flex flex-col rounded-xl border border-border bg-card shadow-sm overflow-hidden"
       style={{ maxHeight: 'calc(100vh - 6rem)' }}
     >
-      <div className="flex-1 overflow-y-auto" style={{ padding: '20px', paddingBottom: '0', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto scroll-smooth" style={{ padding: '20px', paddingBottom: '0', display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {/* Model Selector */}
         <div>
           <label className="mb-1.5 block text-sm font-medium text-foreground">
