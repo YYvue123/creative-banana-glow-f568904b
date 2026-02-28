@@ -164,7 +164,6 @@ export const scenarios: Scenario[] = [
     nameKey: 'scenario_search',
     images: [
       { altKey: 'scene_search_1_alt', promptKey: 'scene_search_1_prompt' },
-      { altKey: 'scene_search_2_alt', promptKey: 'scene_search_2_prompt' },
     ],
   },
   {
@@ -172,7 +171,6 @@ export const scenarios: Scenario[] = [
     nameKey: 'scenario_multiangle',
     images: [
       { altKey: 'scene_multi_1_alt', promptKey: 'scene_multi_1_prompt' },
-      { altKey: 'scene_multi_2_alt', promptKey: 'scene_multi_2_prompt' },
     ],
   },
   {
@@ -180,7 +178,6 @@ export const scenarios: Scenario[] = [
     nameKey: 'scenario_text',
     images: [
       { altKey: 'scene_text_1_alt', promptKey: 'scene_text_1_prompt' },
-      { altKey: 'scene_text_2_alt', promptKey: 'scene_text_2_prompt' },
     ],
   },
   {
@@ -188,7 +185,6 @@ export const scenarios: Scenario[] = [
     nameKey: 'scenario_consistency',
     images: [
       { altKey: 'scene_consist_1_alt', promptKey: 'scene_consist_1_prompt' },
-      { altKey: 'scene_consist_2_alt', promptKey: 'scene_consist_2_prompt' },
     ],
   },
 ];
