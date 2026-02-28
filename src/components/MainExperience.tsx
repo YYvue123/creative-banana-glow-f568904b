@@ -1,29 +1,24 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import { Lang, locales, modelConfigs, modelLocales, scenarios, scenarioLocales, type ModelConfig } from '@/lib/locales';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
-import { Sparkles, Upload, X } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Sparkles, Upload, X, Loader2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-// Scenario images
+// Scenario images (one per scenario)
 import sceneSearch1 from '@/assets/scene-search-1.jpg';
-import sceneSearch2 from '@/assets/scene-search-2.jpg';
 import sceneMulti1 from '@/assets/scene-multiangle-1.jpg';
-import sceneMulti2 from '@/assets/scene-multiangle-2.jpg';
 import sceneText1 from '@/assets/scene-text-1.jpg';
-import sceneText2 from '@/assets/scene-text-2.jpg';
 import sceneConsist1 from '@/assets/scene-consistency-1.jpg';
-import sceneConsist2 from '@/assets/scene-consistency-2.jpg';
 
-const scenarioImageMap: Record<string, string[]> = {
-  search: [sceneSearch1, sceneSearch2],
-  multiangle: [sceneMulti1, sceneMulti2],
-  text: [sceneText1, sceneText2],
-  consistency: [sceneConsist1, sceneConsist2],
+const scenarioImageMap: Record<string, string> = {
+  search: sceneSearch1,
+  multiangle: sceneMulti1,
+  text: sceneText1,
+  consistency: sceneConsist1,
 };
 
 const MainExperience = ({ lang }: { lang: Lang }) => {
@@ -31,7 +26,9 @@ const MainExperience = ({ lang }: { lang: Lang }) => {
   const [refImage, setRefImage] = useState<string | null>(null);
   const [prompt, setPrompt] = useState('');
   const [fieldValues, setFieldValues] = useState<Record<string, string | number>>({});
-  const [selectedSceneImg, setSelectedSceneImg] = useState<string | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState(scenarios[0].id);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const currentModel: ModelConfig = modelConfigs.find((m) => m.id === selectedModelId) || modelConfigs[0];
@@ -44,9 +41,7 @@ const MainExperience = ({ lang }: { lang: Lang }) => {
     setFieldValues((prev) => ({ ...prev, [labelKey]: val }));
   };
 
-  const handleFileUpload = () => {
-    fileInputRef.current?.click();
-  };
+  const handleFileUpload = () => fileInputRef.current?.click();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -56,19 +51,29 @@ const MainExperience = ({ lang }: { lang: Lang }) => {
     }
   };
 
-  const handleSceneClick = (scenarioId: string, imgIdx: number) => {
-    const scenario = scenarios.find((s) => s.id === scenarioId);
-    if (!scenario) return;
-    const imgData = scenario.images[imgIdx];
-    const imgSrc = scenarioImageMap[scenarioId]?.[imgIdx];
-    if (imgSrc) {
-      setRefImage(imgSrc);
-      setSelectedSceneImg(imgSrc);
+  const handleTabChange = (tabId: string) => {
+    setActiveTab(tabId);
+    const scenario = scenarios.find((s) => s.id === tabId);
+    if (scenario && scenario.images[0]) {
+      const imgSrc = scenarioImageMap[tabId];
+      if (imgSrc) setRefImage(imgSrc);
+      setPrompt(scenarioLocales[scenario.images[0].promptKey]?.[lang] || '');
     }
-    if (imgData) {
-      setPrompt(scenarioLocales[imgData.promptKey]?.[lang] || '');
-    }
+    // Reset generated state when switching tabs
+    setGeneratedImage(null);
+    setIsGenerating(false);
   };
+
+  const handleGenerate = useCallback(() => {
+    setIsGenerating(true);
+    setGeneratedImage(null);
+    // Simulate generation (3s)
+    setTimeout(() => {
+      // Use the current scenario image as "generated" result for demo
+      setGeneratedImage(scenarioImageMap[activeTab] || sceneSearch1);
+      setIsGenerating(false);
+    }, 3000);
+  }, [activeTab]);
 
   return (
     <section className="container mx-auto px-4 pb-16">
@@ -110,22 +115,16 @@ const MainExperience = ({ lang }: { lang: Lang }) => {
                   <label className="mb-1.5 block text-sm font-medium text-foreground">
                     {locales[field.labelKey]?.[lang] || field.labelKey}
                   </label>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleFileChange}
-                  />
+                  <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
                   <div
                     onClick={handleFileUpload}
                     className="relative flex h-40 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-dashed border-border bg-secondary transition-colors hover:bg-secondary/80"
                   >
                     {refImage ? (
                       <>
-                        <img src={refImage} alt="Reference image preview" className="h-full w-full object-cover" />
+                        <img src={refImage} alt="Reference" className="h-full w-full object-cover" />
                         <button
-                          onClick={(e) => { e.stopPropagation(); setRefImage(null); setSelectedSceneImg(null); }}
+                          onClick={(e) => { e.stopPropagation(); setRefImage(null); }}
                           className="absolute right-2 top-2 rounded-full bg-foreground/70 p-1 text-background transition-opacity hover:opacity-80"
                         >
                           <X className="h-3 w-3" />
@@ -197,7 +196,7 @@ const MainExperience = ({ lang }: { lang: Lang }) => {
             return null;
           })}
 
-          {/* Fixed: Prompt */}
+          {/* Prompt */}
           <div>
             <label className="mb-1.5 block text-sm font-medium text-foreground">{locales.prompt[lang]}</label>
             <Textarea
@@ -209,21 +208,29 @@ const MainExperience = ({ lang }: { lang: Lang }) => {
             />
           </div>
 
-          {/* Fixed: Generate Button */}
-          <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-            <Sparkles className="mr-2 h-4 w-4" />
-            {locales.generate[lang]}
+          {/* Generate Button */}
+          <Button
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+            onClick={handleGenerate}
+            disabled={isGenerating}
+          >
+            {isGenerating ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Sparkles className="mr-2 h-4 w-4" />
+            )}
+            {isGenerating ? locales.generating[lang] : locales.generate[lang]}
           </Button>
         </motion.div>
 
-        {/* Right: Scenario Showcase */}
+        {/* Right: Scenario Showcase — single 16:9 image */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           className="w-full lg:w-[65%]"
         >
-          <Tabs defaultValue={scenarios[0].id} className="w-full">
+          <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
             <TabsList className="mb-4 flex w-full flex-wrap gap-1 bg-secondary">
               {scenarios.map((s) => (
                 <TabsTrigger
@@ -236,34 +243,69 @@ const MainExperience = ({ lang }: { lang: Lang }) => {
               ))}
             </TabsList>
 
-            {scenarios.map((s) => (
-              <TabsContent key={s.id} value={s.id}>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  {s.images.map((imgData, imgIdx) => {
-                    const imgSrc = scenarioImageMap[s.id]?.[imgIdx];
-                    if (!imgSrc) return null;
-                    return (
-                      <button
-                        key={imgIdx}
-                        onClick={() => handleSceneClick(s.id, imgIdx)}
-                        className={`overflow-hidden rounded-xl transition-all duration-200 ${
-                          selectedSceneImg === imgSrc
-                            ? 'ring-2 ring-primary shadow-md'
-                            : 'ring-1 ring-border hover:ring-primary/50'
-                        }`}
-                      >
-                        <img
+            {scenarios.map((s) => {
+              const imgSrc = scenarioImageMap[s.id];
+              const altText = scenarioLocales[s.images[0]?.altKey]?.[lang] || '';
+              return (
+                <TabsContent key={s.id} value={s.id} className="mt-0">
+                  <div className="relative w-full overflow-hidden rounded-xl bg-secondary" style={{ aspectRatio: '16/9' }}>
+                    <AnimatePresence mode="wait">
+                      {isGenerating && activeTab === s.id ? (
+                        /* Generating placeholder */
+                        <motion.div
+                          key="generating"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-secondary"
+                        >
+                          {/* Shimmer skeleton */}
+                          <div className="absolute inset-0 overflow-hidden">
+                            <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-secondary via-muted to-secondary" />
+                            <motion.div
+                              className="absolute inset-0 bg-gradient-to-r from-transparent via-foreground/5 to-transparent"
+                              animate={{ x: ['-100%', '100%'] }}
+                              transition={{ repeat: Infinity, duration: 1.5, ease: 'linear' }}
+                            />
+                          </div>
+                          <div className="relative z-10 flex flex-col items-center gap-3">
+                            <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                            <span className="text-sm font-medium text-muted-foreground">
+                              {locales.generating[lang]}
+                            </span>
+                          </div>
+                        </motion.div>
+                      ) : generatedImage && activeTab === s.id ? (
+                        /* Generated result */
+                        <motion.img
+                          key="generated"
+                          src={generatedImage}
+                          alt="Generated result"
+                          initial={{ opacity: 0, scale: 1.05 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.5 }}
+                          className="absolute inset-0 h-full w-full object-cover"
+                        />
+                      ) : (
+                        /* Default scenario image */
+                        <motion.img
+                          key="default"
                           src={imgSrc}
-                          alt={scenarioLocales[imgData.altKey]?.[lang] || ''}
-                          className="h-48 w-full object-cover sm:h-56"
+                          alt={altText}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="absolute inset-0 h-full w-full object-cover"
                           loading="lazy"
                         />
-                      </button>
-                    );
-                  })}
-                </div>
-              </TabsContent>
-            ))}
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </TabsContent>
+              );
+            })}
           </Tabs>
         </motion.div>
       </div>
