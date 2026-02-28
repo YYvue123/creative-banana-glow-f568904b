@@ -1,68 +1,66 @@
 import { motion } from 'framer-motion';
-import { Upload, MessageSquareText, Download } from 'lucide-react';
 import { Lang } from '@/lib/locales';
 
+import stepUpload from '@/assets/step-upload.jpg';
+import stepPrompt from '@/assets/step-prompt.jpg';
+import stepGenerate from '@/assets/step-generate.jpg';
+
 interface Step {
-  icon: React.ElementType;
+  image: string;
   title: string;
   description: string;
 }
 
 const steps: Step[] = [
   {
-    icon: Upload,
+    image: stepUpload,
     title: '第一步：上传图片（可选）',
     description:
       '如需优化或修改现有图片，请上传一张图片。Nano Banana 2 支持图像编辑和风格转换。您也可以跳过此步骤，直接通过文字描述生成全新图像。',
   },
   {
-    icon: MessageSquareText,
+    image: stepPrompt,
     title: '第二步：输入提示词',
     description:
       '输入清晰的描述说明您想要创建的内容。Nano Banana 2 能理解详细指令，可在图像中添加对象、调整风格或渲染精准文字。',
   },
   {
-    icon: Download,
+    image: stepGenerate,
     title: '第三步：生成并下载',
     description:
       '点击生成，等待几秒钟。Nano Banana 2 将输出清晰的 4K 图像。查看结果后，下载最终文件，用于设计、社交媒体发布或营销推广。',
   },
 ];
 
-const StepCard = ({ step, index }: { step: Step; index: number }) => {
-  const Icon = step.icon;
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.45, delay: index * 0.12 }}
-      className="group flex flex-col rounded-2xl border border-border bg-card p-6 transition-all duration-200 hover:-translate-y-1 hover:border-primary/30"
-    >
-      {/* Illustration area */}
-      <div className="mb-5 flex h-[240px] items-center justify-center rounded-xl bg-secondary">
-        <div className="flex flex-col items-center gap-3">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
-            <Icon className="h-8 w-8 text-primary" />
-          </div>
-          <span className="text-sm font-semibold text-muted-foreground">
-            Step {index + 1}
-          </span>
-        </div>
-      </div>
+const StepCard = ({ step, index }: { step: Step; index: number }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 24 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, margin: '-40px' }}
+    transition={{ duration: 0.45, delay: index * 0.12 }}
+    className="group flex flex-col rounded-2xl border border-border bg-card overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:border-primary/30"
+  >
+    {/* Step illustration */}
+    <div className="relative h-[240px] w-full overflow-hidden bg-secondary">
+      <img
+        src={step.image}
+        alt={step.title}
+        className="h-full w-full object-cover"
+        loading="lazy"
+      />
+    </div>
 
-      {/* Title */}
+    {/* Text content */}
+    <div className="flex flex-1 flex-col p-6">
       <h3 className="mb-3 text-lg font-bold leading-snug text-foreground">
         {step.title}
       </h3>
-
-      {/* Description */}
       <p className="text-sm leading-relaxed text-muted-foreground">
         {step.description}
       </p>
-    </motion.div>
-  );
-};
+    </div>
+  </motion.div>
+);
 
 const HowItWorks = ({ lang: _lang }: { lang: Lang }) => (
   <section className="bg-secondary/40 py-20">
