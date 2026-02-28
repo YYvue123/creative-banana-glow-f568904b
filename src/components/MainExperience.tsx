@@ -374,12 +374,28 @@ export const ScenarioShowcase = () => {
   const handleCopy = async () => {
     if (!generatedImage) return;
     try {
-      const res = await fetch(generatedImage);
-      const blob = await res.blob();
-      await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
-      toast.success(lang === 'zh' ? '已复制到剪贴板' : 'Copied to clipboard');
-    } catch {
+      // Draw image to canvas and export as PNG blob for clipboard compatibility
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      await new Promise<void>((resolve, reject) => {
+        img.onload = () => resolve();
+        img.onerror = () => reject(new Error('Image load failed'));
+        img.src = generatedImage;
+      });
+      const canvas = document.createElement('canvas');
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext('2d')!;
+      ctx.drawImage(img, 0, 0);
+      const blob = await new Promise<Blob>((resolve, reject) => {
+        canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('toBlob failed'))), 'image/png');
+      });
+      await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+      toast.success(lang === 'zh' ? '复制成功' : 'Copied to clipboard');
+    } catch (err) {
+      console.error('Copy failed:', err);
       toast.error(lang === 'zh' ? '复制失败' : 'Copy failed');
+    }
     }
   };
 
