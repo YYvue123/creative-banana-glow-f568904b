@@ -7,7 +7,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Sparkles, Upload, X, Loader2, Download, Copy, ZoomIn } from 'lucide-react';
+import { Sparkles, Upload, X, Loader2, Download, Copy, ZoomIn, RefreshCw, AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import sceneSearch1 from '@/assets/scene-search-1.jpg';
@@ -117,25 +117,24 @@ export const ExperienceProvider = ({ lang, children }: { lang: Lang; children: R
 
       if (error) {
         console.error('Edge function error:', error);
-        toast.error('生成失败，请稍后重试');
-        setUiState('idle');
+        toast.error('非常抱歉，本次生图没有成功，您可以点击生成按钮重试');
+        setUiState('error');
         return;
       }
 
       if (data?.imageUrl) {
         setGeneratedImage(data.imageUrl);
         setUiState('success');
+        toast.success('您的图像已经准备好，可以来查看结果啦');
       } else {
-        // Fallback to scenario image if no image returned
         console.warn('No image in response, using fallback. Response:', data);
-        toast.info('模型未返回图片，已使用示例图片');
-        setGeneratedImage(MOCK_DATA.scenarioImageMap[activeTab] || sceneSearch1);
-        setUiState('success');
+        toast.error('非常抱歉，本次生图没有成功，您可以点击生成按钮重试');
+        setUiState('error');
       }
     } catch (err) {
       console.error('Generate error:', err);
-      toast.error('生成请求失败');
-      setUiState('idle');
+      toast.error('非常抱歉，本次生图没有成功，您可以点击生成按钮重试');
+      setUiState('error');
     }
   }, [activeTab, prompt, refImage, fieldValues]);
 
@@ -333,7 +332,7 @@ export const ConfigPanel = () => {
 
 /* ── Scenario Showcase (right side) ── */
 export const ScenarioShowcase = () => {
-  const { lang, activeTab, handleTabChange, uiState, generatedImage, fieldValues } = useExperience();
+  const { lang, activeTab, handleTabChange, uiState, generatedImage, fieldValues, handleGenerate } = useExperience();
   const [showLightbox, setShowLightbox] = useState(false);
 
   const isGenerating = uiState === 'generating';
@@ -495,6 +494,28 @@ export const ScenarioShowcase = () => {
                         </div>
                       </div>
                     </>
+                  ) : uiState === 'error' && activeTab === s.id ? (
+                    <motion.div
+                      key="error"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-secondary"
+                    >
+                      <AlertTriangle className="h-12 w-12 text-destructive" />
+                      <p className="text-sm font-medium text-muted-foreground text-center px-6">
+                        {lang === 'zh' ? '生成失败，请重试' : 'Generation failed, please retry'}
+                      </p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleGenerate}
+                        className="gap-2"
+                      >
+                        <RefreshCw className="h-4 w-4" />
+                        {lang === 'zh' ? '重试' : 'Retry'}
+                      </Button>
+                    </motion.div>
                   ) : (
                     <motion.img
                       key="default"
