@@ -12,20 +12,30 @@ serve(async (req) => {
   }
 
   try {
-    const { prompt, refImage } = await req.json();
+    const { prompt, refImage, aspectRatio, resolution } = await req.json();
 
     const YUNWU_API_KEY = Deno.env.get("YUNWU_API_KEY");
     if (!YUNWU_API_KEY) {
       throw new Error("YUNWU_API_KEY is not configured");
     }
 
+    // Build resolution suffix
+    const resolutionMap: Record<string, string> = {
+      '1K': '1024x1024',
+      '2K': '2048x2048',
+      '4K': '4096x4096',
+    };
+    const resText = resolutionMap[resolution] || resolution || '2048x2048';
+    const ratioText = aspectRatio || '1:1';
+
     // Build user message content
     const userContent: any[] = [];
 
-    // Add text prompt
+    // Add text prompt with resolution and aspect ratio instructions
+    const enhancedPrompt = `${prompt || "Generate a beautiful image"}. Output image resolution: ${resText}, aspect ratio: ${ratioText}.`;
     userContent.push({
       type: "text",
-      text: prompt || "Generate a beautiful 4K image",
+      text: enhancedPrompt,
     });
 
     // Add reference image if provided
