@@ -112,140 +112,144 @@ export const ConfigPanel = () => {
       initial={{ opacity: 0, x: -20 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      className="space-y-5 rounded-xl border border-border bg-card shadow-sm" style={{ padding: '20px' }}
+      className="flex flex-col rounded-xl border border-border bg-card shadow-sm overflow-hidden"
     >
-      {/* Model Selector */}
-      <div>
-        <label className="mb-1.5 block text-sm font-medium text-foreground">
-          {locales.modelLabel[lang]}
-        </label>
-        <Select value={selectedModelId} onValueChange={setSelectedModelId}>
-          <SelectTrigger className="w-full border-border bg-background">
-            <span className="truncate">{modelLocales[currentModel.nameKey][lang]}</span>
-          </SelectTrigger>
-          <SelectContent align="start">
-            {modelConfigs.map((m) => (
-              <SelectItem key={m.id} value={m.id} className="items-start">
-                <div className="flex flex-col items-start text-left">
-                  <span className="font-medium">{modelLocales[m.nameKey][lang]}</span>
-                  <span className="text-xs text-muted-foreground">{modelLocales[m.descKey][lang]}</span>
-                </div>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Dynamic fields */}
-      {currentModel.fields.map((field) => {
-        if (field.type === 'upload') {
-          return (
-            <div key={field.labelKey}>
-              <label className="mb-1.5 block text-sm font-medium text-foreground">
-                {locales[field.labelKey]?.[lang] || field.labelKey}
-              </label>
-              <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
-              <div
-                onClick={handleFileUpload}
-                className="relative flex h-40 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-dashed border-border bg-secondary transition-colors hover:bg-secondary/80"
-              >
-                {refImage ? (
-                  <>
-                    <img src={refImage} alt="Reference" className="h-full w-full object-cover" />
-                    <button
-                      onClick={(e) => { e.stopPropagation(); setRefImage(null); }}
-                      className="absolute right-2 top-2 rounded-full bg-foreground/70 p-1 text-background transition-opacity hover:opacity-80"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </>
-                ) : (
-                  <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                    <Upload className="h-6 w-6" />
-                    <span className="text-xs">{locales.uploadOrSelect[lang]}</span>
+      <div className="flex-1 overflow-y-auto space-y-5" style={{ padding: '20px', paddingBottom: '0' }}>
+        {/* Model Selector */}
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">
+            {locales.modelLabel[lang]}
+          </label>
+          <Select value={selectedModelId} onValueChange={setSelectedModelId}>
+            <SelectTrigger className="w-full border-border bg-background">
+              <span className="truncate">{modelLocales[currentModel.nameKey][lang]}</span>
+            </SelectTrigger>
+            <SelectContent align="start">
+              {modelConfigs.map((m) => (
+                <SelectItem key={m.id} value={m.id} className="items-start">
+                  <div className="flex flex-col items-start text-left">
+                    <span className="font-medium">{modelLocales[m.nameKey][lang]}</span>
+                    <span className="text-xs text-muted-foreground">{modelLocales[m.descKey][lang]}</span>
                   </div>
-                )}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Dynamic fields */}
+        {currentModel.fields.map((field) => {
+          if (field.type === 'upload') {
+            return (
+              <div key={field.labelKey}>
+                <label className="mb-1.5 block text-sm font-medium text-foreground">
+                  {locales[field.labelKey]?.[lang] || field.labelKey}
+                </label>
+                <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+                <div
+                  onClick={handleFileUpload}
+                  className="relative flex h-40 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-dashed border-border bg-secondary transition-colors hover:bg-secondary/80"
+                >
+                  {refImage ? (
+                    <>
+                      <img src={refImage} alt="Reference" className="h-full w-full object-cover" />
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setRefImage(null); }}
+                        className="absolute right-2 top-2 rounded-full bg-foreground/70 p-1 text-background transition-opacity hover:opacity-80"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </>
+                  ) : (
+                    <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                      <Upload className="h-6 w-6" />
+                      <span className="text-xs">{locales.uploadOrSelect[lang]}</span>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        }
+            );
+          }
 
-        if (field.type === 'radio' && field.options) {
-          return (
-            <div key={field.labelKey}>
-              <label className="mb-1.5 block text-sm font-medium text-foreground">
-                {locales[field.labelKey]?.[lang] || field.labelKey}
-              </label>
-              <RadioGroup
-                value={String(getFieldValue(field.labelKey, field.default))}
-                onValueChange={(v) => setFieldValue(field.labelKey, v)}
-                className="flex flex-wrap gap-2 mt-1.5"
-              >
-                {field.options.map((opt) => (
-                  <label
-                    key={opt}
-                    className={`flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors ${
-                      String(getFieldValue(field.labelKey, field.default)) === opt
-                        ? 'border-primary bg-primary/10 text-primary'
-                        : 'border-border bg-background text-muted-foreground hover:border-primary/50'
-                    }`}
-                  >
-                    <RadioGroupItem value={opt} className="sr-only" />
-                    {opt}
-                  </label>
-                ))}
-              </RadioGroup>
-            </div>
-          );
-        }
-
-        if (field.type === 'select' && field.options) {
-          return (
-            <div key={field.labelKey}>
-              <label className="mb-1.5 block text-sm font-medium text-foreground">
-                {locales[field.labelKey]?.[lang] || field.labelKey}
-              </label>
-              <Select
-                value={String(getFieldValue(field.labelKey, field.default))}
-                onValueChange={(v) => setFieldValue(field.labelKey, v)}
-              >
-                <SelectTrigger className="w-full border-border bg-background">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
+          if (field.type === 'radio' && field.options) {
+            return (
+              <div key={field.labelKey}>
+                <label className="mb-1.5 block text-sm font-medium text-foreground">
+                  {locales[field.labelKey]?.[lang] || field.labelKey}
+                </label>
+                <RadioGroup
+                  value={String(getFieldValue(field.labelKey, field.default))}
+                  onValueChange={(v) => setFieldValue(field.labelKey, v)}
+                  className="flex flex-wrap gap-2 mt-1.5"
+                >
                   {field.options.map((opt) => (
-                    <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                    <label
+                      key={opt}
+                      className={`flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors ${
+                        String(getFieldValue(field.labelKey, field.default)) === opt
+                          ? 'border-primary bg-primary/10 text-primary'
+                          : 'border-border bg-background text-muted-foreground hover:border-primary/50'
+                      }`}
+                    >
+                      <RadioGroupItem value={opt} className="sr-only" />
+                      {opt}
+                    </label>
                   ))}
-                </SelectContent>
-              </Select>
-            </div>
-          );
-        }
+                </RadioGroup>
+              </div>
+            );
+          }
 
-        return null;
-      })}
+          if (field.type === 'select' && field.options) {
+            return (
+              <div key={field.labelKey}>
+                <label className="mb-1.5 block text-sm font-medium text-foreground">
+                  {locales[field.labelKey]?.[lang] || field.labelKey}
+                </label>
+                <Select
+                  value={String(getFieldValue(field.labelKey, field.default))}
+                  onValueChange={(v) => setFieldValue(field.labelKey, v)}
+                >
+                  <SelectTrigger className="w-full border-border bg-background">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {field.options.map((opt) => (
+                      <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            );
+          }
 
-      {/* Prompt */}
-      <div>
-        <label className="mb-1.5 block text-sm font-medium text-foreground">{locales.prompt[lang]}</label>
-        <Textarea
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          rows={4}
-          className="resize-none border-border bg-background text-foreground placeholder:text-muted-foreground"
-          placeholder={locales.promptPlaceholder[lang]}
-        />
+          return null;
+        })}
+
+        {/* Prompt */}
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">{locales.prompt[lang]}</label>
+          <Textarea
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            rows={4}
+            className="resize-none border-border bg-background text-foreground placeholder:text-muted-foreground"
+            placeholder={locales.promptPlaceholder[lang]}
+          />
+        </div>
       </div>
 
-      {/* Generate Button */}
-      <Button
-        className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-        onClick={handleGenerate}
-        disabled={isGenerating}
-      >
-        {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
-        {isGenerating ? locales.generating[lang] : locales.generate[lang]}
-      </Button>
+      {/* Generate Button - always visible at bottom */}
+      <div className="border-t border-border" style={{ padding: '20px' }}>
+        <Button
+          className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+          onClick={handleGenerate}
+          disabled={isGenerating}
+        >
+          {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
+          {isGenerating ? locales.generating[lang] : locales.generate[lang]}
+        </Button>
+      </div>
     </motion.div>
   );
 };
