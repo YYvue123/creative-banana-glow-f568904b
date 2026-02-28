@@ -113,6 +113,7 @@ export const ConfigPanel = () => {
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
       className="flex flex-col rounded-xl border border-border bg-card shadow-sm overflow-hidden"
+      style={{ maxHeight: 'calc(100vh - 6rem)' }}
     >
       <div className="flex-1 overflow-y-auto space-y-5" style={{ padding: '20px', paddingBottom: '0' }}>
         {/* Model Selector */}

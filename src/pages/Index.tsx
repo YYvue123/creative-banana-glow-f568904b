@@ -27,7 +27,7 @@ const Index = () => {
         <div className="container mx-auto px-4 pt-20 md:pt-28">
           <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
             {/* Left: Sticky Config Panel — aligned with H1 */}
-            <div className="w-full lg:w-[35%] lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto">
+            <div className="w-full lg:w-[35%] lg:sticky lg:top-20">
               <ConfigPanel />
             </div>
 
