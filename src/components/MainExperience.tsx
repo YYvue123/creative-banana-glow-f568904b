@@ -87,9 +87,7 @@ const MainExperience = ({ lang }: { lang: Lang }) => {
             </label>
             <Select value={selectedModelId} onValueChange={setSelectedModelId}>
               <SelectTrigger className="w-full border-border bg-background">
-                <SelectValue>
-                  {modelLocales[currentModel.nameKey][lang]}
-                </SelectValue>
+                <span className="truncate">{modelLocales[currentModel.nameKey][lang]}</span>
               </SelectTrigger>
               <SelectContent align="start">
                 {modelConfigs.map((m) => (
