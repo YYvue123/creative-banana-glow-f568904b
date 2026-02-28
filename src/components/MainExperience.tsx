@@ -210,7 +210,7 @@ export const ConfigPanel = () => {
                   {field.options.map((opt) => (
                     <label
                       key={opt}
-                      className={`flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors ${
+                      className={`flex cursor-pointer items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm transition-colors ${
                         String(getFieldValue(field.labelKey, field.default)) === opt
                           ? 'border-primary bg-primary/10 text-primary'
                           : 'border-border bg-background text-muted-foreground hover:border-primary/50'
