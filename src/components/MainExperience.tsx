@@ -332,7 +332,7 @@ export const ConfigPanel = () => {
 
 /* ── Scenario Showcase (right side) ── */
 export const ScenarioShowcase = () => {
-  const { lang, activeTab, handleTabChange, uiState, generatedImage, fieldValues } = useExperience();
+  const { lang, activeTab, handleTabChange, uiState, generatedImage, fieldValues, handleGenerate } = useExperience();
   const [showLightbox, setShowLightbox] = useState(false);
 
   const isGenerating = uiState === 'generating';
