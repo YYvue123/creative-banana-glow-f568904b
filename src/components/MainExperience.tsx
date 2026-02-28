@@ -396,7 +396,6 @@ export const ScenarioShowcase = () => {
       console.error('Copy failed:', err);
       toast.error(lang === 'zh' ? '复制失败' : 'Copy failed');
     }
-    }
   };
 
   return (
