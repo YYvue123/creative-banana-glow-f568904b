@@ -268,7 +268,7 @@ export const ScenarioShowcase = () => {
     >
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
         {!isGenerating && !generatedImage && (
-          <TabsList className="mb-4 flex w-full flex-wrap gap-1 bg-secondary">
+          <TabsList className="flex w-full flex-wrap gap-1 bg-secondary" style={{ marginBottom: 'clamp(0.5rem, 1vh, 1rem)' }}>
             {scenarios.map((s) => (
               <TabsTrigger
                 key={s.id}

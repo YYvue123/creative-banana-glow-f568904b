@@ -32,7 +32,7 @@ const Index = () => {
             </div>
 
             {/* Right: Hero title + Scenario showcase */}
-            <div className="w-full lg:w-[65%] space-y-8">
+            <div className="w-full lg:w-[65%] flex flex-col" style={{ gap: 'clamp(1rem, 2vh, 2rem)' }}>
               <HeroSection lang={lang} />
               <ScenarioShowcase />
             </div>
