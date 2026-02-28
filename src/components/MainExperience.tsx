@@ -137,7 +137,7 @@ export const ExperienceProvider = ({ lang, children }: { lang: Lang; children: R
       toast.error('生成请求失败');
       setUiState('idle');
     }
-  }, [activeTab, prompt, refImage]);
+  }, [activeTab, prompt, refImage, fieldValues]);
 
   return (
     <ExperienceContext.Provider value={{
