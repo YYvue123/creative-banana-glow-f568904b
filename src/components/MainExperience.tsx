@@ -7,7 +7,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Sparkles, Upload, X, Loader2, Download, Copy, ZoomIn } from 'lucide-react';
+import { Sparkles, Upload, X, Loader2, Download, Copy, ZoomIn, RefreshCw, AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import sceneSearch1 from '@/assets/scene-search-1.jpg';
