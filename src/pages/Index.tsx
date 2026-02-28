@@ -7,7 +7,7 @@ import FeatureGrid from '@/components/FeatureGrid';
 import FAQSection from '@/components/FAQSection';
 import HowItWorks from '@/components/HowItWorks';
 import Testimonials from '@/components/Testimonials';
-import FooterSupport from '@/components/FooterSupport';
+
 
 const Index = () => {
   const [lang, setLang] = useState<Lang>('en');
