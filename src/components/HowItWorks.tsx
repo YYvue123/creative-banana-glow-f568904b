@@ -63,7 +63,7 @@ const StepCard = ({ step, index }: { step: Step; index: number }) => (
 );
 
 const HowItWorks = ({ lang: _lang }: { lang: Lang }) => (
-  <section className="bg-secondary/40 py-20">
+  <section className="py-20">
     <div className="container mx-auto max-w-[1280px] px-4">
       {/* Header */}
       <motion.div
