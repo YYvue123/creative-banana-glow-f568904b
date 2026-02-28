@@ -103,10 +103,15 @@ export const ExperienceProvider = ({ lang, children }: { lang: Lang; children: R
     setGeneratedImage(null);
 
     try {
+      const aspectRatio = String(fieldValues['aspectRatio'] || '1:1');
+      const resolution = String(fieldValues['resolution'] || '2K');
+
       const { data, error } = await supabase.functions.invoke('generate-image', {
         body: {
           prompt: prompt || scenarioLocales[`scene_${activeTab}_1_prompt`]?.zh || 'Generate a beautiful 4K image',
           refImage: refImage,
+          aspectRatio,
+          resolution,
         },
       });
 
@@ -132,7 +137,7 @@ export const ExperienceProvider = ({ lang, children }: { lang: Lang; children: R
       toast.error('生成请求失败');
       setUiState('idle');
     }
-  }, [activeTab, prompt, refImage]);
+  }, [activeTab, prompt, refImage, fieldValues]);
 
   return (
     <ExperienceContext.Provider value={{
