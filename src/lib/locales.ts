@@ -75,6 +75,9 @@ export const locales: Record<string, Record<Lang, string>> = {
   promptPlaceholder: {
     en: 'Describe the image you want to create...', zh: '描述你想要创建的图像...', ko: '생성할 이미지를 설명하세요...', ja: '作成したい画像を説明してください...', es: 'Describe la imagen que deseas crear...',
   },
+  generating: {
+    en: 'Generating...', zh: '生成中...', ko: '생성 중...', ja: '生成中...', es: 'Generando...',
+  },
 };
 
 /* ── Model configuration ── */
