@@ -2,7 +2,7 @@ import { Lang, locales } from '@/lib/locales';
 import { motion } from 'framer-motion';
 
 const HeroSection = ({ lang }: { lang: Lang }) => (
-  <section className="text-left" style={{ paddingBottom: 'clamp(0.5rem, 1vh, 1.5rem)' }}>
+  <section className="text-center" style={{ paddingBottom: 'clamp(0.5rem, 1vh, 1.5rem)' }}>
     <motion.h1
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
