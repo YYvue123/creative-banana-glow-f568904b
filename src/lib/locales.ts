@@ -100,9 +100,9 @@ export const modelConfigs: ModelConfig[] = [
     descKey: 'model_nb2_desc',
     fields: [
       { type: 'upload', labelKey: 'referenceImage' },
-      { type: 'select', labelKey: 'resolution', options: ['1K', '2K', '4K'], default: '2K' },
-      { type: 'number', labelKey: 'quantity', default: 1 },
-      { type: 'select', labelKey: 'aspectRatio', options: ['1:1', '3:4', '4:3', '9:16', '16:9'], default: '1:1' },
+      { type: 'radio', labelKey: 'resolution', options: ['1K', '2K', '4K'], default: '2K' },
+      { type: 'radio', labelKey: 'quantity', options: ['1', '2', '3', '4'], default: '1' },
+      { type: 'radio', labelKey: 'aspectRatio', options: ['1:1', '3:4', '4:3', '9:16', '16:9'], default: '1:1' },
     ],
   },
   {
