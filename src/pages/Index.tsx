@@ -15,7 +15,7 @@ const Index = () => {
       {/* Top bar */}
       <header className="fixed left-0 right-0 top-0 z-50 flex items-center justify-between border-b border-border bg-background/80 px-6 py-3 backdrop-blur-md">
         <button
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          onClick={() => window.location.reload()}
           className="font-display text-lg font-bold text-foreground hover:opacity-80 transition-opacity"
         >
           Nano Banana 2
