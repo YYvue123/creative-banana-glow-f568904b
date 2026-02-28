@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { Lang, locales, modelConfigs, modelLocales, scenarios, scenarioLocales, type ModelConfig } from '@/lib/locales';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -141,6 +142,35 @@ const MainExperience = ({ lang }: { lang: Lang }) => {
               );
             }
 
+            if (field.type === 'radio' && field.options) {
+              return (
+                <div key={field.labelKey}>
+                  <label className="mb-1.5 block text-sm font-medium text-foreground">
+                    {locales[field.labelKey]?.[lang] || field.labelKey}
+                  </label>
+                  <RadioGroup
+                    value={String(getFieldValue(field.labelKey, field.default))}
+                    onValueChange={(v) => setFieldValue(field.labelKey, v)}
+                    className="flex flex-wrap gap-2 mt-1.5"
+                  >
+                    {field.options.map((opt) => (
+                      <label
+                        key={opt}
+                        className={`flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors ${
+                          String(getFieldValue(field.labelKey, field.default)) === opt
+                            ? 'border-primary bg-primary/10 text-primary'
+                            : 'border-border bg-background text-muted-foreground hover:border-primary/50'
+                        }`}
+                      >
+                        <RadioGroupItem value={opt} className="sr-only" />
+                        {opt}
+                      </label>
+                    ))}
+                  </RadioGroup>
+                </div>
+              );
+            }
+
             if (field.type === 'select' && field.options) {
               return (
                 <div key={field.labelKey}>
@@ -160,24 +190,6 @@ const MainExperience = ({ lang }: { lang: Lang }) => {
                       ))}
                     </SelectContent>
                   </Select>
-                </div>
-              );
-            }
-
-            if (field.type === 'number') {
-              return (
-                <div key={field.labelKey}>
-                  <label className="mb-1.5 block text-sm font-medium text-foreground">
-                    {locales[field.labelKey]?.[lang] || field.labelKey}
-                  </label>
-                  <Input
-                    type="number"
-                    min={1}
-                    max={8}
-                    value={String(getFieldValue(field.labelKey, field.default))}
-                    onChange={(e) => setFieldValue(field.labelKey, Number(e.target.value))}
-                    className="border-border bg-background"
-                  />
                 </div>
               );
             }
