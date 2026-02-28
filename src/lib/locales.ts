@@ -24,7 +24,7 @@ export const locales: Record<string, Record<Lang, string>> = {
     es: 'Potenciando la creatividad sin límites: generación de imágenes IA multimodelo de alto rendimiento para profesionales.',
   },
   resolution: {
-    en: 'Resolution', zh: '分辨率', ko: '해상도', ja: '解像度', es: 'Resolución',
+    en: 'Resolution', zh: '清晰度', ko: '해상도', ja: '解像度', es: 'Resolución',
   },
   referenceImage: {
     en: 'Reference Image', zh: '参考图片', ko: '참고 이미지', ja: '参照画像', es: 'Imagen de referencia',
@@ -45,7 +45,7 @@ export const locales: Record<string, Record<Lang, string>> = {
     en: 'Frequently Asked Questions', zh: '常见问题', ko: '자주 묻는 질문', ja: 'よくある質問', es: 'Preguntas frecuentes',
   },
   uploadOrSelect: {
-    en: 'Upload or select a case', zh: '上传或选择案例', ko: '업로드 또는 사례 선택', ja: 'アップロードまたはケースを選択', es: 'Sube o selecciona un caso',
+    en: 'Click to upload reference image', zh: '点击上传参考图片', ko: '클릭하여 참고 이미지 업로드', ja: 'クリックして参照画像をアップロード', es: 'Haz clic para subir imagen de referencia',
   },
   supportTitle: {
     en: 'Need Help?', zh: '需要帮助？', ko: '도움이 필요하신가요?', ja: 'ヘルプが必要ですか？', es: '¿Necesitas ayuda?',
@@ -63,45 +63,215 @@ export const locales: Record<string, Record<Lang, string>> = {
   generateNow: {
     en: 'Generate Now →', zh: '立即生成 →', ko: '지금 생성 →', ja: '今すぐ生成 →', es: 'Generar ahora →',
   },
+  modelLabel: {
+    en: 'Model', zh: '模型', ko: '모델', ja: 'モデル', es: 'Modelo',
+  },
+  quantity: {
+    en: 'Quantity', zh: '生图数量', ko: '생성 수량', ja: '生成枚数', es: 'Cantidad',
+  },
+  aspectRatio: {
+    en: 'Aspect Ratio', zh: '生图比例', ko: '화면 비율', ja: 'アスペクト比', es: 'Relación de aspecto',
+  },
+  promptPlaceholder: {
+    en: 'Describe the image you want to create...', zh: '描述你想要创建的图像...', ko: '생성할 이미지를 설명하세요...', ja: '作成したい画像を説明してください...', es: 'Describe la imagen que deseas crear...',
+  },
 };
 
-export const casePrompts: Record<Lang, string[]> = {
-  en: [
-    'A cinematic portrait with golden sunset light, flowing hair, soft bokeh background',
-    'A serene Japanese zen garden with cherry blossoms, watercolor painting style',
-    'A futuristic cyberpunk cityscape at night with neon lights and flying vehicles',
-    'A cute cartoon cat wearing a chef hat cooking in a miniature kitchen, kawaii style',
-    'A majestic snow-capped mountain landscape at golden hour with crystal clear lake reflection',
-  ],
-  zh: [
-    '金色夕阳下的电影感人像，飘逸长发，柔和虚化背景',
-    '宁静的日式禅意花园，樱花盛开，水彩画风格',
-    '夜晚的未来赛博朋克城市景观，霓虹灯光和飞行器',
-    '戴厨师帽的可爱卡通猫在微型厨房做饭，卡哇伊风格',
-    '金色时刻的壮丽雪山景观，清澈湖面倒影',
-  ],
-  ko: [
-    '황금빛 석양 속 시네마틱 인물 사진, 흩날리는 머리카락, 부드러운 보케 배경',
-    '벚꽃이 핀 고요한 일본식 정원, 수채화 스타일',
-    '네온 조명과 비행체가 있는 야간 미래 사이버펑크 도시 풍경',
-    '셰프 모자를 쓴 귀여운 만화 고양이가 미니 주방에서 요리하는 카와이 스타일',
-    '골든아워의 장엄한 설산 풍경, 맑은 호수 반영',
-  ],
-  ja: [
-    '黄金色の夕日に照らされた映画的なポートレート、なびく髪、柔らかなボケ背景',
-    '桜が咲く静寂な日本の禅庭園、水彩画スタイル',
-    'ネオンライトと飛行車両がある夜のサイバーパンク都市景観',
-    'シェフ帽をかぶった可愛い漫画の猫がミニキッチンで料理する、カワイイスタイル',
-    'ゴールデンアワーの壮大な雪山の風景、澄んだ湖の反射',
-  ],
-  es: [
-    'Retrato cinematográfico con luz dorada del atardecer, cabello al viento, fondo bokeh suave',
-    'Jardín zen japonés sereno con flores de cerezo, estilo acuarela',
-    'Paisaje urbano cyberpunk futurista nocturno con luces de neón y vehículos voladores',
-    'Gato de dibujos animados lindo con gorro de chef cocinando, estilo kawaii',
-    'Majestuoso paisaje montañoso nevado al atardecer con reflejo en lago cristalino',
-  ],
+/* ── Model configuration ── */
+
+export interface ModelFieldConfig {
+  type: 'upload' | 'select' | 'number';
+  labelKey: string;
+  options?: string[];
+  default?: string | number;
+}
+
+export interface ModelConfig {
+  id: string;
+  nameKey: string;
+  descKey: string;
+  fields: ModelFieldConfig[];
+}
+
+export const modelConfigs: ModelConfig[] = [
+  {
+    id: 'nano-banana-2',
+    nameKey: 'model_nb2_name',
+    descKey: 'model_nb2_desc',
+    fields: [
+      { type: 'upload', labelKey: 'referenceImage' },
+      { type: 'select', labelKey: 'resolution', options: ['1K', '2K', '4K'], default: '2K' },
+      { type: 'number', labelKey: 'quantity', default: 1 },
+      { type: 'select', labelKey: 'aspectRatio', options: ['1:1', '3:4', '4:3', '9:16', '16:9'], default: '1:1' },
+    ],
+  },
+  {
+    id: 'nano-banana-pro',
+    nameKey: 'model_nbpro_name',
+    descKey: 'model_nbpro_desc',
+    fields: [
+      { type: 'upload', labelKey: 'referenceImage' },
+      { type: 'select', labelKey: 'resolution', options: ['2K', '4K'], default: '4K' },
+      { type: 'number', labelKey: 'quantity', default: 1 },
+      { type: 'select', labelKey: 'aspectRatio', options: ['1:1', '3:4', '4:3', '9:16', '16:9'], default: '1:1' },
+    ],
+  },
+];
+
+export const modelLocales: Record<string, Record<Lang, string>> = {
+  model_nb2_name: {
+    en: 'Nano Banana 2', zh: 'Nano Banana 2', ko: 'Nano Banana 2', ja: 'Nano Banana 2', es: 'Nano Banana 2',
+  },
+  model_nb2_desc: {
+    en: 'Versatile multi-style AI image generation with high-resolution output.',
+    zh: '多风格 AI 图像生成，支持高分辨率输出。',
+    ko: '다양한 스타일의 AI 이미지 생성, 고해상도 출력 지원.',
+    ja: '多彩なスタイルのAI画像生成、高解像度出力をサポート。',
+    es: 'Generación de imágenes IA multistilo versátil con salida de alta resolución.',
+  },
+  model_nbpro_name: {
+    en: 'Nano Banana Pro', zh: 'Nano Banana Pro', ko: 'Nano Banana Pro', ja: 'Nano Banana Pro', es: 'Nano Banana Pro',
+  },
+  model_nbpro_desc: {
+    en: 'Professional-grade model with enhanced detail, consistency and 4K rendering.',
+    zh: '专业级模型，增强细节、一致性和 4K 渲染。',
+    ko: '향상된 디테일, 일관성 및 4K 렌더링의 프로급 모델.',
+    ja: 'ディテール強化、一貫性向上、4Kレンダリングのプロフェッショナルモデル。',
+    es: 'Modelo profesional con detalle mejorado, consistencia y renderizado 4K.',
+  },
 };
+
+/* ── Scenario showcase ── */
+
+export interface ScenarioImage {
+  src: string; // will be mapped to import at component level
+  alt: string;
+  promptKey: string;
+}
+
+export interface Scenario {
+  id: string;
+  nameKey: string;
+  images: { altKey: string; promptKey: string }[];
+}
+
+export const scenarios: Scenario[] = [
+  {
+    id: 'search',
+    nameKey: 'scenario_search',
+    images: [
+      { altKey: 'scene_search_1_alt', promptKey: 'scene_search_1_prompt' },
+      { altKey: 'scene_search_2_alt', promptKey: 'scene_search_2_prompt' },
+    ],
+  },
+  {
+    id: 'multiangle',
+    nameKey: 'scenario_multiangle',
+    images: [
+      { altKey: 'scene_multi_1_alt', promptKey: 'scene_multi_1_prompt' },
+      { altKey: 'scene_multi_2_alt', promptKey: 'scene_multi_2_prompt' },
+    ],
+  },
+  {
+    id: 'text',
+    nameKey: 'scenario_text',
+    images: [
+      { altKey: 'scene_text_1_alt', promptKey: 'scene_text_1_prompt' },
+      { altKey: 'scene_text_2_alt', promptKey: 'scene_text_2_prompt' },
+    ],
+  },
+  {
+    id: 'consistency',
+    nameKey: 'scenario_consistency',
+    images: [
+      { altKey: 'scene_consist_1_alt', promptKey: 'scene_consist_1_prompt' },
+      { altKey: 'scene_consist_2_alt', promptKey: 'scene_consist_2_prompt' },
+    ],
+  },
+];
+
+export const scenarioLocales: Record<string, Record<Lang, string>> = {
+  scenario_search: {
+    en: 'Search Grounding & Trends', zh: '搜索驱动 & 趋势', ko: '검색 기반 & 트렌드', ja: '検索グラウンディング＆トレンド', es: 'Búsqueda y Tendencias',
+  },
+  scenario_multiangle: {
+    en: 'Multi-angle Display', zh: '多角度展示', ko: '다각도 디스플레이', ja: 'マルチアングル表示', es: 'Visualización Multiángulo',
+  },
+  scenario_text: {
+    en: 'Text Rendering & Translation', zh: '文字渲染 & 翻译', ko: '텍스트 렌더링 & 번역', ja: 'テキストレンダリング＆翻訳', es: 'Renderizado de Texto y Traducción',
+  },
+  scenario_consistency: {
+    en: 'Consistency', zh: '一致性', ko: '일관성', ja: '一貫性', es: 'Consistencia',
+  },
+  // alts
+  scene_search_1_alt: { en: 'AI search grounding dashboard', zh: 'AI搜索驱动面板', ko: 'AI 검색 기반 대시보드', ja: 'AI検索グラウンディングダッシュボード', es: 'Panel de búsqueda AI' },
+  scene_search_2_alt: { en: 'AI trending mood board', zh: 'AI趋势情绪板', ko: 'AI 트렌드 무드보드', ja: 'AIトレンドムードボード', es: 'Tablero de tendencias AI' },
+  scene_multi_1_alt: { en: 'Multi-angle handbag product shots', zh: '多角度手提包产品图', ko: '다각도 핸드백 제품 사진', ja: 'マルチアングルハンドバッグ製品写真', es: 'Fotos de bolso multiángulo' },
+  scene_multi_2_alt: { en: 'Multi-angle sneaker product shots', zh: '多角度运动鞋产品图', ko: '다각도 스니커즈 제품 사진', ja: 'マルチアングルスニーカー製品写真', es: 'Fotos de zapatillas multiángulo' },
+  scene_text_1_alt: { en: 'AI text rendering on poster', zh: 'AI海报文字渲染', ko: 'AI 포스터 텍스트 렌더링', ja: 'AIポスターテキストレンダリング', es: 'Renderizado de texto AI en póster' },
+  scene_text_2_alt: { en: 'Multilingual packaging text', zh: '多语言包装文字', ko: '다국어 패키지 텍스트', ja: '多言語パッケージテキスト', es: 'Texto multilingüe en empaque' },
+  scene_consist_1_alt: { en: 'Character consistency sheet', zh: '角色一致性参考表', ko: '캐릭터 일관성 시트', ja: 'キャラクター一貫性シート', es: 'Hoja de consistencia de personaje' },
+  scene_consist_2_alt: { en: 'Mascot in different scenes', zh: '不同场景中的吉祥物', ko: '다양한 장면의 마스코트', ja: '異なるシーンのマスコット', es: 'Mascota en diferentes escenas' },
+  // prompts
+  scene_search_1_prompt: {
+    en: 'Generate trending visual content inspired by current search topics, dashboard style with image grid',
+    zh: '根据当前搜索话题生成趋势视觉内容，仪表板风格图片网格',
+    ko: '현재 검색 주제에서 영감을 받은 트렌드 시각 콘텐츠 생성, 대시보드 스타일 이미지 그리드',
+    ja: '現在の検索トピックからインスパイアされたトレンドビジュアルコンテンツ、ダッシュボードスタイル',
+    es: 'Generar contenido visual tendencia inspirado en temas de búsqueda actuales, estilo dashboard',
+  },
+  scene_search_2_prompt: {
+    en: 'Create an AI-curated interior design mood board with trending home decor styles',
+    zh: 'AI精选室内设计情绪板，展示流行家居装饰风格',
+    ko: 'AI 큐레이션 인테리어 디자인 무드보드, 트렌드 홈 데코 스타일',
+    ja: 'AIキュレーションのインテリアデザインムードボード、トレンドホームデコスタイル',
+    es: 'Crear un mood board de diseño interior curado por IA con estilos de decoración tendencia',
+  },
+  scene_multi_1_prompt: {
+    en: 'Professional product photography of a luxury black handbag from 6 angles, white studio background',
+    zh: '奢华黑色手提包6角度专业产品摄影，白色摄影棚背景',
+    ko: '럭셔리 블랙 핸드백 6각도 전문 제품 사진, 흰색 스튜디오 배경',
+    ja: '高級ブラックハンドバッグの6アングルプロフェッショナル製品写真、白スタジオ背景',
+    es: 'Fotografía profesional de bolso negro de lujo desde 6 ángulos, fondo de estudio blanco',
+  },
+  scene_multi_2_prompt: {
+    en: 'Multi-angle product display of white sneakers with orange accents, 4 views, clean studio',
+    zh: '白色运动鞋橙色点缀多角度产品展示，4个视角，简洁摄影棚',
+    ko: '오렌지 포인트 화이트 스니커즈 다각도 제품 디스플레이, 4개 뷰, 클린 스튜디오',
+    ja: 'オレンジアクセントのホワイトスニーカーマルチアングル製品表示、4ビュー、クリーンスタジオ',
+    es: 'Exhibición multiángulo de zapatillas blancas con acentos naranjas, 4 vistas, estudio limpio',
+  },
+  scene_text_1_prompt: {
+    en: 'Creative marketing poster with bold "MARKETING" text overlaid on colorful abstract art background',
+    zh: '创意营销海报，大胆的"MARKETING"文字叠加在彩色抽象艺术背景上',
+    ko: '컬러풀한 추상 아트 배경에 볼드한 "MARKETING" 텍스트가 있는 크리에이티브 마케팅 포스터',
+    ja: 'カラフルな抽象アート背景にボールドな"MARKETING"テキストのクリエイティブマーケティングポスター',
+    es: 'Póster de marketing creativo con texto "MARKETING" en negrita sobre fondo de arte abstracto colorido',
+  },
+  scene_text_2_prompt: {
+    en: 'Product packaging with multilingual text rendering in Chinese and Japanese, green and red design',
+    zh: '多语言产品包装文字渲染，中日文，绿红配色设计',
+    ko: '중국어, 일본어 다국어 텍스트 렌더링 제품 패키지, 녹색 및 빨간색 디자인',
+    ja: '中国語と日本語の多言語テキストレンダリング製品パッケージ、緑と赤のデザイン',
+    es: 'Empaque de producto con texto multilingüe en chino y japonés, diseño verde y rojo',
+  },
+  scene_consist_1_prompt: {
+    en: 'Character consistency reference sheet, anime style, same character in 5 different outfits and poses',
+    zh: '角色一致性参考表，动漫风格，同一角色5种不同服装和姿势',
+    ko: '캐릭터 일관성 참조 시트, 애니메이션 스타일, 같은 캐릭터 5가지 다른 의상과 포즈',
+    ja: 'キャラクター一貫性リファレンスシート、アニメスタイル、同一キャラクター5つの異なる衣装とポーズ',
+    es: 'Hoja de referencia de consistencia de personaje, estilo anime, mismo personaje en 5 atuendos diferentes',
+  },
+  scene_consist_2_prompt: {
+    en: 'Same cute mascot character in 4 different environments: beach, park, city, mountains, maintaining identical design',
+    zh: '同一可爱吉祥物角色在4个不同环境中：海滩、公园、城市、山脉，保持一致设计',
+    ko: '같은 귀여운 마스코트 캐릭터가 4가지 다른 환경: 해변, 공원, 도시, 산, 동일한 디자인 유지',
+    ja: '同じかわいいマスコットキャラクターが4つの異なる環境：ビーチ、公園、都市、山、同一デザインを維持',
+    es: 'Mismo personaje mascota en 4 entornos diferentes: playa, parque, ciudad, montañas, manteniendo diseño idéntico',
+  },
+};
+
+/* ── Feature grid (alternating rows) ── */
 
 export const featureCards: { icon: string; status: string; nameKey: string; descKey: string }[] = [
   { icon: 'Plug', status: 'Available', nameKey: 'feat_api', descKey: 'feat_api_desc' },
@@ -181,6 +351,8 @@ export const featureLocales: Record<string, Record<Lang, string>> = {
   },
 };
 
+/* ── FAQ ── */
+
 export const faqData: { qKey: string; aKey: string }[] = [
   { qKey: 'faq_q1', aKey: 'faq_a1' },
   { qKey: 'faq_q2', aKey: 'faq_a2' },
@@ -237,6 +409,46 @@ export const faqLocales: Record<string, Record<Lang, string>> = {
     zh: 'Nano Banana 2 的风格微调功能允许您调整色温、艺术风格和细节级别等参数，实现精确的创意控制。',
     ko: 'Nano Banana 2의 스타일 미세 조정은 색온도, 예술적 스타일, 디테일 레벨과 같은 매개변수를 조정하여 정밀한 크리에이티브 제어를 가능하게 합니다.',
     ja: 'Nano Banana 2のスタイルファインチューニングでは、色温度、芸術的スタイル、ディテールレベルなどのパラメータを調整して精密なクリエイティブ制御を実現します。',
-    es: 'El ajuste de estilo en Nano Banana 2 te permite ajustar parámetros como la temperatura de color, el estilo artístico y el nivel de detalle para lograr un control creativo preciso.',
+    es: 'El ajuste de estilo en Nano Banana 2 te permite ajustar parámetros como temperatura de color, estilo artístico y nivel de detalle para lograr un control creativo preciso.',
   },
+};
+
+/* ── Legacy case prompts (kept for backward compat) ── */
+
+export const casePrompts: Record<Lang, string[]> = {
+  en: [
+    'A cinematic portrait with golden sunset light, flowing hair, soft bokeh background',
+    'A serene Japanese zen garden with cherry blossoms, watercolor painting style',
+    'A futuristic cyberpunk cityscape at night with neon lights and flying vehicles',
+    'A cute cartoon cat wearing a chef hat cooking in a miniature kitchen, kawaii style',
+    'A majestic snow-capped mountain landscape at golden hour with crystal clear lake reflection',
+  ],
+  zh: [
+    '金色夕阳下的电影感人像，飘逸长发，柔和虚化背景',
+    '宁静的日式禅意花园，樱花盛开，水彩画风格',
+    '夜晚的未来赛博朋克城市景观，霓虹灯光和飞行器',
+    '戴厨师帽的可爱卡通猫在微型厨房做饭，卡哇伊风格',
+    '金色时刻的壮丽雪山景观，清澈湖面倒影',
+  ],
+  ko: [
+    '황금빛 석양 속 시네마틱 인물 사진, 흩날리는 머리카락, 부드러운 보케 배경',
+    '벚꽃이 핀 고요한 일본식 정원, 수채화 스타일',
+    '네온 조명과 비행체가 있는 야간 미래 사이버펑크 도시 풍경',
+    '셰프 모자를 쓴 귀여운 만화 고양이가 미니 주방에서 요리하는 카와이 스타일',
+    '골든아워의 장엄한 설산 풍경, 맑은 호수 반영',
+  ],
+  ja: [
+    '黄金色の夕日に照らされた映画的なポートレート、なびく髪、柔らかなボケ背景',
+    '桜が咲く静寂な日本の禅庭園、水彩画スタイル',
+    'ネオンライトと飛行車両がある夜のサイバーパンク都市景観',
+    'シェフ帽をかぶった可愛い漫画の猫がミニキッチンで料理する、カワイイスタイル',
+    'ゴールデンアワーの壮大な雪山の風景、澄んだ湖の反射',
+  ],
+  es: [
+    'Retrato cinematográfico con luz dorada del atardecer, cabello al viento, fondo bokeh suave',
+    'Jardín zen japonés sereno con flores de cerezo, estilo acuarela',
+    'Paisaje urbano cyberpunk futurista nocturno con luces de neón y vehículos voladores',
+    'Gato de dibujos animados lindo con gorro de chef cocinando, estilo kawaii',
+    'Majestuoso paisaje montañoso nevado al atardecer con reflejo en lago cristalino',
+  ],
 };
