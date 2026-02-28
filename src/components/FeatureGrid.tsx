@@ -31,7 +31,7 @@ const FeatureGrid = ({ lang }: { lang: Lang }) => (
           transition={{ duration: 0.5 }}
           className="flex flex-1 flex-col justify-center"
         >
-          {idx > 0 && (
+          {idx > 1 && (
             <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-accent">
               <Icon className="h-5 w-5 text-primary-deep" />
             </div>
