@@ -333,9 +333,23 @@ export const ConfigPanel = () => {
 
 /* ── Scenario Showcase (right side) ── */
 export const ScenarioShowcase = () => {
-  const { lang, activeTab, handleTabChange, uiState, generatedImage } = useExperience();
+  const { lang, activeTab, handleTabChange, uiState, generatedImage, fieldValues } = useExperience();
 
   const isGenerating = uiState === 'generating';
+
+  // Map aspect ratio string to CSS aspect-ratio value
+  const getAspectRatio = () => {
+    if (!generatedImage && !isGenerating) return '16/9';
+    const ratio = String(fieldValues['aspectRatio'] || '1:1');
+    const map: Record<string, string> = {
+      '1:1': '1/1',
+      '3:4': '3/4',
+      '4:3': '4/3',
+      '9:16': '9/16',
+      '16:9': '16/9',
+    };
+    return map[ratio] || '1/1';
+  };
 
   return (
     <motion.div
@@ -364,7 +378,13 @@ export const ScenarioShowcase = () => {
           const altText = scenarioLocales[s.images[0]?.altKey]?.[lang] || '';
           return (
             <TabsContent key={s.id} value={s.id} className="mt-0">
-              <div className="relative w-full overflow-hidden rounded-xl bg-secondary" style={{ aspectRatio: '16/9' }}>
+              <div
+                className="relative w-full overflow-hidden rounded-xl bg-secondary mx-auto transition-all duration-500"
+                style={{
+                  aspectRatio: getAspectRatio(),
+                  maxHeight: '70vh',
+                }}
+              >
                 <AnimatePresence mode="wait">
                   {isGenerating && activeTab === s.id ? (
                     <motion.div
@@ -398,7 +418,7 @@ export const ScenarioShowcase = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.5 }}
-                      className="absolute inset-0 h-full w-full object-cover"
+                      className="absolute inset-0 h-full w-full object-contain"
                     />
                   ) : (
                     <motion.img
