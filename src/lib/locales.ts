@@ -75,6 +75,9 @@ export const locales: Record<string, Record<Lang, string>> = {
   promptPlaceholder: {
     en: 'Describe the image you want to create...', zh: '描述你想要创建的图像...', ko: '생성할 이미지를 설명하세요...', ja: '作成したい画像を説明してください...', es: 'Describe la imagen que deseas crear...',
   },
+  generating: {
+    en: 'Generating...', zh: '生成中...', ko: '생성 중...', ja: '生成中...', es: 'Generando...',
+  },
 };
 
 /* ── Model configuration ── */
@@ -161,7 +164,6 @@ export const scenarios: Scenario[] = [
     nameKey: 'scenario_search',
     images: [
       { altKey: 'scene_search_1_alt', promptKey: 'scene_search_1_prompt' },
-      { altKey: 'scene_search_2_alt', promptKey: 'scene_search_2_prompt' },
     ],
   },
   {
@@ -169,7 +171,6 @@ export const scenarios: Scenario[] = [
     nameKey: 'scenario_multiangle',
     images: [
       { altKey: 'scene_multi_1_alt', promptKey: 'scene_multi_1_prompt' },
-      { altKey: 'scene_multi_2_alt', promptKey: 'scene_multi_2_prompt' },
     ],
   },
   {
@@ -177,7 +178,6 @@ export const scenarios: Scenario[] = [
     nameKey: 'scenario_text',
     images: [
       { altKey: 'scene_text_1_alt', promptKey: 'scene_text_1_prompt' },
-      { altKey: 'scene_text_2_alt', promptKey: 'scene_text_2_prompt' },
     ],
   },
   {
@@ -185,7 +185,6 @@ export const scenarios: Scenario[] = [
     nameKey: 'scenario_consistency',
     images: [
       { altKey: 'scene_consist_1_alt', promptKey: 'scene_consist_1_prompt' },
-      { altKey: 'scene_consist_2_alt', promptKey: 'scene_consist_2_prompt' },
     ],
   },
 ];
