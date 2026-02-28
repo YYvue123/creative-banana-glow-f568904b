@@ -14,9 +14,12 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Top bar */}
       <header className="fixed left-0 right-0 top-0 z-50 flex items-center justify-between border-b border-border bg-background/80 px-6 py-3 backdrop-blur-md">
-        <span className="font-display text-lg font-bold text-foreground">
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="font-display text-lg font-bold text-foreground hover:opacity-80 transition-opacity"
+        >
           Nano Banana 2
-        </span>
+        </button>
         <LanguageSelector lang={lang} onChange={setLang} />
       </header>
 
