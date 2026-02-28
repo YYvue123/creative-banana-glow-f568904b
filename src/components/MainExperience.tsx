@@ -494,6 +494,28 @@ export const ScenarioShowcase = () => {
                         </div>
                       </div>
                     </>
+                  ) : uiState === 'error' && activeTab === s.id ? (
+                    <motion.div
+                      key="error"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-secondary"
+                    >
+                      <AlertTriangle className="h-12 w-12 text-destructive" />
+                      <p className="text-sm font-medium text-muted-foreground text-center px-6">
+                        {lang === 'zh' ? '生成失败，请重试' : 'Generation failed, please retry'}
+                      </p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleGenerate}
+                        className="gap-2"
+                      >
+                        <RefreshCw className="h-4 w-4" />
+                        {lang === 'zh' ? '重试' : 'Retry'}
+                      </Button>
+                    </motion.div>
                   ) : (
                     <motion.img
                       key="default"
