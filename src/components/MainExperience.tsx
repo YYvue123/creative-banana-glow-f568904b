@@ -7,7 +7,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Sparkles, Upload, X, Loader2 } from 'lucide-react';
+import { Sparkles, Upload, X, Loader2, Download, Copy, ZoomIn } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import sceneSearch1 from '@/assets/scene-search-1.jpg';
@@ -334,6 +334,7 @@ export const ConfigPanel = () => {
 /* ── Scenario Showcase (right side) ── */
 export const ScenarioShowcase = () => {
   const { lang, activeTab, handleTabChange, uiState, generatedImage, fieldValues } = useExperience();
+  const [showLightbox, setShowLightbox] = useState(false);
 
   const isGenerating = uiState === 'generating';
 
@@ -349,6 +350,37 @@ export const ScenarioShowcase = () => {
       '16:9': '16/9',
     };
     return map[ratio] || '1/1';
+  };
+
+  const handleDownload = async () => {
+    if (!generatedImage) return;
+    try {
+      const res = await fetch(generatedImage);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `nano-banana-${Date.now()}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast.success(lang === 'zh' ? '下载成功' : 'Download successful');
+    } catch {
+      toast.error(lang === 'zh' ? '下载失败' : 'Download failed');
+    }
+  };
+
+  const handleCopy = async () => {
+    if (!generatedImage) return;
+    try {
+      const res = await fetch(generatedImage);
+      const blob = await res.blob();
+      await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
+      toast.success(lang === 'zh' ? '已复制到剪贴板' : 'Copied to clipboard');
+    } catch {
+      toast.error(lang === 'zh' ? '复制失败' : 'Copy failed');
+    }
   };
 
   return (
@@ -379,7 +411,7 @@ export const ScenarioShowcase = () => {
           return (
             <TabsContent key={s.id} value={s.id} className="mt-0">
               <div
-                className="relative w-full overflow-hidden rounded-xl bg-secondary mx-auto transition-all duration-500"
+                className="group relative w-full overflow-hidden rounded-xl bg-secondary mx-auto transition-all duration-500"
                 style={{
                   aspectRatio: getAspectRatio(),
                   maxHeight: '70vh',
@@ -410,16 +442,44 @@ export const ScenarioShowcase = () => {
                       </div>
                     </motion.div>
                   ) : generatedImage && activeTab === s.id ? (
-                    <motion.img
-                      key="generated"
-                      src={generatedImage}
-                      alt="Generated result"
-                      initial={{ opacity: 0, scale: 1.05 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.5 }}
-                      className="absolute inset-0 h-full w-full object-contain"
-                    />
+                    <>
+                      <motion.img
+                        key="generated"
+                        src={generatedImage}
+                        alt="Generated result"
+                        initial={{ opacity: 0, scale: 1.05 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="absolute inset-0 h-full w-full object-contain"
+                      />
+                      {/* Hover toolbar */}
+                      <div className="absolute inset-0 flex items-end justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                        <div className="pointer-events-auto mb-4 flex gap-2 rounded-lg bg-foreground/70 p-1.5 backdrop-blur-sm shadow-lg">
+                          <button
+                            onClick={() => setShowLightbox(true)}
+                            className="rounded-md p-2 text-background hover:bg-foreground/20 transition-colors"
+                            title={lang === 'zh' ? '放大查看' : 'Zoom in'}
+                          >
+                            <ZoomIn className="h-5 w-5" />
+                          </button>
+                          <button
+                            onClick={handleDownload}
+                            className="rounded-md p-2 text-background hover:bg-foreground/20 transition-colors"
+                            title={lang === 'zh' ? '下载' : 'Download'}
+                          >
+                            <Download className="h-5 w-5" />
+                          </button>
+                          <button
+                            onClick={handleCopy}
+                            className="rounded-md p-2 text-background hover:bg-foreground/20 transition-colors"
+                            title={lang === 'zh' ? '复制' : 'Copy'}
+                          >
+                            <Copy className="h-5 w-5" />
+                          </button>
+                        </div>
+                      </div>
+                    </>
                   ) : (
                     <motion.img
                       key="default"
@@ -439,6 +499,35 @@ export const ScenarioShowcase = () => {
           );
         })}
       </Tabs>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {showLightbox && generatedImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm"
+            onClick={() => setShowLightbox(false)}
+          >
+            <motion.img
+              src={generatedImage}
+              alt="Zoomed view"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              className="max-h-[90vh] max-w-[90vw] rounded-xl object-contain shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+            <button
+              onClick={() => setShowLightbox(false)}
+              className="absolute right-4 top-4 rounded-full bg-foreground/70 p-2 text-background hover:bg-foreground/50 transition-colors"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };
