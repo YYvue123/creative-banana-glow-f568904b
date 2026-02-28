@@ -224,17 +224,19 @@ const MainExperience = ({ lang }: { lang: Lang }) => {
           className="w-full lg:w-[65%]"
         >
           <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-            <TabsList className="mb-4 flex w-full flex-wrap gap-1 bg-secondary">
-              {scenarios.map((s) => (
-                <TabsTrigger
-                  key={s.id}
-                  value={s.id}
-                  className="flex-1 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                >
-                  {scenarioLocales[s.nameKey][lang]}
-                </TabsTrigger>
-              ))}
-            </TabsList>
+            {!isGenerating && !generatedImage && (
+              <TabsList className="mb-4 flex w-full flex-wrap gap-1 bg-secondary">
+                {scenarios.map((s) => (
+                  <TabsTrigger
+                    key={s.id}
+                    value={s.id}
+                    className="flex-1 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                  >
+                    {scenarioLocales[s.nameKey][lang]}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            )}
 
             {scenarios.map((s) => {
               const imgSrc = scenarioImageMap[s.id];
