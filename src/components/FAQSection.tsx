@@ -3,7 +3,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 
 const FAQSection = ({ lang }: { lang: Lang }) => (
   <section className="container mx-auto px-4 py-16">
-    <h2 className="mb-8 font-display text-2xl font-bold text-foreground">{locales.faqTitle[lang]}</h2>
+    <h2 className="mb-8 text-center font-display text-2xl font-bold text-foreground">{locales.faqTitle[lang]}</h2>
     <Accordion type="single" collapsible className="mx-auto max-w-3xl">
       {faqData.map((item, idx) => (
         <AccordionItem key={idx} value={`faq-${idx}`}>
