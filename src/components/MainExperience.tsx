@@ -112,7 +112,7 @@ export const ConfigPanel = () => {
       initial={{ opacity: 0, x: -20 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      className="space-y-5 rounded-xl border border-border bg-card p-6 shadow-sm"
+      className="space-y-5 rounded-xl border border-border bg-card shadow-sm" style={{ padding: '20px' }}
     >
       {/* Model Selector */}
       <div>
