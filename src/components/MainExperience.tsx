@@ -173,7 +173,7 @@ export const ConfigPanel = () => {
                 <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
                 <div
                   onClick={handleFileUpload}
-                  className="relative flex h-40 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-dashed border-border bg-secondary transition-colors hover:bg-secondary/80"
+                  className="relative flex h-[140px] cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-dashed border-border bg-secondary transition-colors hover:bg-secondary/80"
                 >
                   {refImage ? (
                     <>
