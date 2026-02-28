@@ -117,25 +117,24 @@ export const ExperienceProvider = ({ lang, children }: { lang: Lang; children: R
 
       if (error) {
         console.error('Edge function error:', error);
-        toast.error('生成失败，请稍后重试');
-        setUiState('idle');
+        toast.error('非常抱歉，本次生图没有成功，您可以点击生成按钮重试');
+        setUiState('error');
         return;
       }
 
       if (data?.imageUrl) {
         setGeneratedImage(data.imageUrl);
         setUiState('success');
+        toast.success('您的图像已经准备好，可以来查看结果啦');
       } else {
-        // Fallback to scenario image if no image returned
         console.warn('No image in response, using fallback. Response:', data);
-        toast.info('模型未返回图片，已使用示例图片');
-        setGeneratedImage(MOCK_DATA.scenarioImageMap[activeTab] || sceneSearch1);
-        setUiState('success');
+        toast.error('非常抱歉，本次生图没有成功，您可以点击生成按钮重试');
+        setUiState('error');
       }
     } catch (err) {
       console.error('Generate error:', err);
-      toast.error('生成请求失败');
-      setUiState('idle');
+      toast.error('非常抱歉，本次生图没有成功，您可以点击生成按钮重试');
+      setUiState('error');
     }
   }, [activeTab, prompt, refImage, fieldValues]);
 
