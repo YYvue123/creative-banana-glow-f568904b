@@ -61,7 +61,7 @@ export const locales: Record<string, Record<Lang, string>> = {
     en: 'Contact Support', zh: '联系支持', ko: '지원 문의', ja: 'サポートに連絡', es: 'Contactar soporte',
   },
   generateNow: {
-    en: 'Generate Now →', zh: '立即生成 →', ko: '지금 생성 →', ja: '今すぐ生成 →', es: 'Generar ahora →',
+    en: 'Try Now →', zh: '立即使用 →', ko: '지금 사용 →', ja: '今すぐ使う →', es: 'Usar ahora →',
   },
   modelLabel: {
     en: 'Model', zh: '模型', ko: '모델', ja: 'モデル', es: 'Modelo',
@@ -284,10 +284,10 @@ export const featureCards: { icon: string; status: string; nameKey: string; desc
 ];
 
 export const featureLocales: Record<string, Record<Lang, string>> = {
-  feat_api: { en: 'API Integration', zh: 'API 集成', ko: 'API 통합', ja: 'API統合', es: 'Integración API' },
+  feat_api: { en: 'API Integration', zh: 'Nano Banana 2：免费高速与专业级 4K 图像生成能力', ko: 'API 통합', ja: 'API統合', es: 'Integración API' },
   feat_api_desc: {
     en: 'Nano Banana 2 offers seamless RESTful API integration for automated image generation workflows.',
-    zh: 'Nano Banana 2 提供无缝的 RESTful API 集成，实现自动化图像生成工作流。',
+    zh: 'Nano Banana 2 基于 Gemini 3.1 Flash，让您快速创建、编辑和融合 4K 图像。精准文字渲染、多图编辑，免费享受专业级能力。',
     ko: 'Nano Banana 2는 자동화된 이미지 생성 워크플로를 위한 원활한 RESTful API 통합을 제공합니다.',
     ja: 'Nano Banana 2は、自動画像生成ワークフローのためのシームレスなRESTful API統合を提供します。',
     es: 'Nano Banana 2 ofrece integración API RESTful sin interrupciones para flujos de trabajo automatizados.',

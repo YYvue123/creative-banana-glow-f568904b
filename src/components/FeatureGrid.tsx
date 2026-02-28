@@ -41,7 +41,7 @@ const FeatureGrid = ({ lang }: { lang: Lang }) => (
             {featureLocales[row.descKey][lang]}
           </p>
           <div>
-            <button className="rounded-full bg-foreground px-6 py-2.5 text-sm font-medium text-background transition-opacity hover:opacity-80">
+            <button className="rounded-full bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-80">
               {locales.generateNow[lang]}
             </button>
           </div>
