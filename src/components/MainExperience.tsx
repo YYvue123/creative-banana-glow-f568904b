@@ -53,13 +53,6 @@ const MainExperience = ({ lang }: { lang: Lang }) => {
 
   const handleTabChange = (tabId: string) => {
     setActiveTab(tabId);
-    const scenario = scenarios.find((s) => s.id === tabId);
-    if (scenario && scenario.images[0]) {
-      const imgSrc = scenarioImageMap[tabId];
-      if (imgSrc) setRefImage(imgSrc);
-      setPrompt(scenarioLocales[scenario.images[0].promptKey]?.[lang] || '');
-    }
-    // Reset generated state when switching tabs
     setGeneratedImage(null);
     setIsGenerating(false);
   };
