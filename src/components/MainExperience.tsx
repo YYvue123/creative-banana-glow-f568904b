@@ -151,7 +151,7 @@ export const ConfigPanel = () => {
         {currentModel.fields.map((field) => {
           if (field.type === 'upload') {
             return (
-              <div key={field.labelKey}>
+              <div key={field.labelKey} onClick={handleFieldFocus}>
                 <label className="mb-1.5 block text-sm font-medium text-foreground">
                   {locales[field.labelKey]?.[lang] || field.labelKey}
                 </label>
