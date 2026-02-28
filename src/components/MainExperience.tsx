@@ -46,7 +46,22 @@ interface ExperienceState {
 const ExperienceContext = createContext<ExperienceState | null>(null);
 
 export const ExperienceProvider = ({ lang, children }: { lang: Lang; children: React.ReactNode }) => {
-  const [selectedModelId, setSelectedModelId] = useState(modelConfigs[0].id);
+  const [selectedModelId, setSelectedModelIdRaw] = useState(modelConfigs[0].id);
+  const setSelectedModelId = (id: string) => {
+    setSelectedModelIdRaw(id);
+    const model = modelConfigs.find((m) => m.id === id);
+    if (model) {
+      const defaults: Record<string, string | number> = {};
+      model.fields.forEach((field) => {
+        if (field.default !== undefined) {
+          defaults[field.labelKey] = field.default;
+        } else if (field.options?.length) {
+          defaults[field.labelKey] = field.options[0];
+        }
+      });
+      setFieldValues(defaults);
+    }
+  };
   const [refImage, setRefImage] = useState<string | null>(null);
   const [prompt, setPrompt] = useState('');
   const [fieldValues, setFieldValues] = useState<Record<string, string | number>>({});
