@@ -70,13 +70,13 @@ const MainExperience = ({ lang }: { lang: Lang }) => {
 
   return (
     <section className="container mx-auto px-4 pb-16">
-      <div className="flex flex-col gap-8 lg:flex-row">
-        {/* Left: Config Panel */}
+      <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
+        {/* Left: Config Panel — sticky */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          className="w-full space-y-5 rounded-xl border border-border bg-card p-6 shadow-sm lg:w-[35%]"
+          className="w-full space-y-5 rounded-xl border border-border bg-card p-6 shadow-sm lg:sticky lg:top-20 lg:w-[35%] lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto"
         >
           {/* Model Selector */}
           <div>
