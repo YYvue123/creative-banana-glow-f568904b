@@ -42,6 +42,7 @@ const Index = () => {
       </ExperienceProvider>
 
       <FeatureGrid lang={lang} />
+      <HowItWorks lang={lang} />
       <FAQSection lang={lang} />
       <FooterSupport lang={lang} />
     </div>
