@@ -23,8 +23,6 @@ const MOCK_DATA = {
     text: sceneText1,
     consistency: sceneConsist1,
   } as Record<string, string>,
-
-  /** Simulated generation delay (ms) */
   mockGenerateDelay: 3000,
 };
 
@@ -165,7 +163,6 @@ export const ConfigPanel = () => {
   } = useExperience();
 
   const isGenerating = uiState === 'generating';
-
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const handleFieldFocus = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -178,7 +175,6 @@ export const ConfigPanel = () => {
   /** @slot Upload reference image to storage */
   const handleUploadToStorage = async (_file: File) => {
     // TODO: [Storage Squad] Connect to API by Dev
-    // Upload file to cloud storage, return URL
   };
   void handleUploadToStorage;
 
@@ -188,16 +184,20 @@ export const ConfigPanel = () => {
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
       className="flex flex-col rounded-xl border border-border bg-card shadow-sm overflow-hidden"
-      style={{ maxHeight: 'calc(100vh - 6rem)' }}
+      style={{ maxHeight: 'calc(100dvh - 6rem)' }}
     >
-      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto scroll-smooth" style={{ padding: '20px', paddingBottom: '16px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div
+        ref={scrollContainerRef}
+        className="flex-1 overflow-y-auto scroll-smooth overscroll-contain"
+        style={{ padding: '20px', paddingBottom: '16px', display: 'flex', flexDirection: 'column', gap: '16px' }}
+      >
         {/* Model Selector */}
         <div>
           <label className="mb-1.5 block text-sm font-medium text-foreground">
             {locales.modelLabel[lang]}
           </label>
           <Select value={selectedModelId} onValueChange={setSelectedModelId}>
-            <SelectTrigger className="w-full border-border bg-background">
+            <SelectTrigger className="w-full border-border bg-background hover:border-primary/50 transition-colors">
               <span className="truncate">{modelLocales[currentModel.nameKey][lang]}</span>
             </SelectTrigger>
             <SelectContent align="start">
@@ -224,16 +224,17 @@ export const ConfigPanel = () => {
                 <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
                 <div
                   onClick={handleFileUpload}
-                  className="relative flex h-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-dashed border-border bg-secondary transition-colors hover:bg-secondary/80"
+                  className="relative flex h-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-dashed border-border bg-secondary transition-colors hover:bg-secondary/80 active:bg-secondary/70"
                 >
                   {refImage ? (
                     <>
                       <img src={refImage} alt="Reference" className="h-full w-full object-cover" />
                       <button
                         onClick={(e) => { e.stopPropagation(); setRefImage(null); }}
-                        className="absolute right-2 top-2 rounded-full bg-foreground/70 p-1 text-background transition-opacity hover:opacity-80"
+                        className="absolute right-2 top-2 rounded-full bg-foreground/70 p-1.5 text-background transition-opacity hover:opacity-80 active:opacity-60 touch-target"
+                        aria-label="Remove image"
                       >
-                        <X className="h-3 w-3" />
+                        <X className="h-3.5 w-3.5" />
                       </button>
                     </>
                   ) : (
@@ -261,7 +262,7 @@ export const ConfigPanel = () => {
                   {field.options.map((opt) => (
                     <label
                       key={opt}
-                      className={`flex cursor-pointer items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm transition-colors ${
+                      className={`flex cursor-pointer items-center gap-1.5 rounded-md border px-3 py-2 text-sm transition-colors active:scale-95 ${
                         String(getFieldValue(field.labelKey, field.default)) === opt
                           ? 'border-primary bg-primary/10 text-primary'
                           : 'border-border bg-background text-muted-foreground hover:border-primary/50'
@@ -286,7 +287,7 @@ export const ConfigPanel = () => {
                   value={String(getFieldValue(field.labelKey, field.default))}
                   onValueChange={(v) => setFieldValue(field.labelKey, v)}
                 >
-                  <SelectTrigger className="w-full border-border bg-background">
+                  <SelectTrigger className="w-full border-border bg-background hover:border-primary/50 transition-colors">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -309,7 +310,7 @@ export const ConfigPanel = () => {
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             rows={4}
-            className="resize-none border-border bg-background text-foreground placeholder:text-muted-foreground"
+            className="resize-none border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-ring focus:border-primary/50"
             placeholder={locales.promptPlaceholder[lang]}
           />
         </div>
@@ -318,7 +319,7 @@ export const ConfigPanel = () => {
       {/* Generate Button - always visible at bottom */}
       <div className="border-t border-border" style={{ padding: '20px' }}>
         <Button
-          className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+          className="w-full bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80 h-11 text-base"
           onClick={handleGenerate}
           disabled={isGenerating}
         >
@@ -337,7 +338,6 @@ export const ScenarioShowcase = () => {
 
   const isGenerating = uiState === 'generating';
 
-  // Map aspect ratio string to CSS aspect-ratio value
   const getAspectRatio = () => {
     if (!generatedImage && !isGenerating) return '16/9';
     const ratio = String(fieldValues['aspectRatio'] || '1:1');
@@ -373,7 +373,6 @@ export const ScenarioShowcase = () => {
   const handleCopy = async () => {
     if (!generatedImage) return;
     try {
-      // Draw image to canvas and export as PNG blob for clipboard compatibility
       const img = new Image();
       img.crossOrigin = 'anonymous';
       await new Promise<void>((resolve, reject) => {
@@ -406,17 +405,19 @@ export const ScenarioShowcase = () => {
     >
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
         {!isGenerating && !generatedImage && (
-          <TabsList className="flex w-full flex-wrap gap-1 bg-secondary" style={{ marginBottom: 'clamp(0.5rem, 1vh, 1rem)' }}>
-            {scenarios.map((s) => (
-              <TabsTrigger
-                key={s.id}
-                value={s.id}
-                className="flex-1 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-              >
-                {scenarioLocales[s.nameKey][lang]}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+          <div className="w-full overflow-x-auto scrollbar-none -mx-1 px-1" style={{ marginBottom: 'clamp(0.5rem, 1vh, 1rem)' }}>
+            <TabsList className="flex w-full min-w-max gap-1 bg-secondary">
+              {scenarios.map((s) => (
+                <TabsTrigger
+                  key={s.id}
+                  value={s.id}
+                  className="flex-1 whitespace-nowrap text-xs sm:text-sm py-2.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground hover:bg-accent transition-colors"
+                >
+                  {scenarioLocales[s.nameKey][lang]}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
         )}
 
         {scenarios.map((s) => {
@@ -467,26 +468,26 @@ export const ScenarioShowcase = () => {
                         transition={{ duration: 0.5 }}
                         className="absolute inset-0 h-full w-full object-contain"
                       />
-                      {/* Hover toolbar */}
-                      <div className="absolute inset-0 flex items-end justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-                        <div className="pointer-events-auto mb-4 flex gap-2 rounded-lg bg-foreground/70 p-1.5 backdrop-blur-sm shadow-lg">
+                      {/* Toolbar: visible on hover (desktop) or always visible (mobile) */}
+                      <div className="absolute inset-x-0 bottom-0 flex items-end justify-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200 pointer-events-none pb-3 sm:pb-4">
+                        <div className="pointer-events-auto flex gap-1.5 sm:gap-2 rounded-lg bg-foreground/70 p-1.5 backdrop-blur-sm shadow-lg">
                           <button
                             onClick={() => setShowLightbox(true)}
-                            className="rounded-md p-2 text-background hover:bg-foreground/20 transition-colors"
+                            className="rounded-md p-2.5 sm:p-2 text-background hover:bg-foreground/20 active:bg-foreground/30 transition-colors touch-target"
                             title={lang === 'zh' ? '放大查看' : 'Zoom in'}
                           >
                             <ZoomIn className="h-5 w-5" />
                           </button>
                           <button
                             onClick={handleDownload}
-                            className="rounded-md p-2 text-background hover:bg-foreground/20 transition-colors"
+                            className="rounded-md p-2.5 sm:p-2 text-background hover:bg-foreground/20 active:bg-foreground/30 transition-colors touch-target"
                             title={lang === 'zh' ? '下载' : 'Download'}
                           >
                             <Download className="h-5 w-5" />
                           </button>
                           <button
                             onClick={handleCopy}
-                            className="rounded-md p-2 text-background hover:bg-foreground/20 transition-colors"
+                            className="rounded-md p-2.5 sm:p-2 text-background hover:bg-foreground/20 active:bg-foreground/30 transition-colors touch-target"
                             title={lang === 'zh' ? '复制' : 'Copy'}
                           >
                             <Copy className="h-5 w-5" />
@@ -510,7 +511,7 @@ export const ScenarioShowcase = () => {
                         variant="outline"
                         size="sm"
                         onClick={handleGenerate}
-                        className="gap-2"
+                        className="gap-2 hover:bg-accent active:bg-accent/80"
                       >
                         <RefreshCw className="h-4 w-4" />
                         {lang === 'zh' ? '重试' : 'Retry'}
@@ -543,7 +544,7 @@ export const ScenarioShowcase = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4"
             onClick={() => setShowLightbox(false)}
           >
             <motion.img
@@ -552,12 +553,13 @@ export const ScenarioShowcase = () => {
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
-              className="max-h-[90vh] max-w-[90vw] rounded-xl object-contain shadow-2xl"
+              className="max-h-[85vh] max-w-full sm:max-w-[90vw] rounded-xl object-contain shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             />
             <button
               onClick={() => setShowLightbox(false)}
-              className="absolute right-4 top-4 rounded-full bg-foreground/70 p-2 text-background hover:bg-foreground/50 transition-colors"
+              className="absolute right-3 top-3 sm:right-4 sm:top-4 rounded-full bg-foreground/70 p-2.5 sm:p-2 text-background hover:bg-foreground/50 active:bg-foreground/40 transition-colors touch-target"
+              aria-label="Close lightbox"
             >
               <X className="h-5 w-5" />
             </button>

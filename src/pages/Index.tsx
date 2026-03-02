@@ -12,10 +12,10 @@ const Index = () => {
   const [lang, setLang] = useState<Lang>('zh');
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen min-h-[100dvh] bg-background">
       <ExperienceProvider lang={lang}>
-        <div className="container mx-auto px-4 pt-8 md:pt-12">
-          <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
+        <div className="container mx-auto px-4 pt-6 sm:pt-8 md:pt-12">
+          <div className="flex flex-col gap-6 sm:gap-8 lg:flex-row lg:items-start">
             <div className="w-full lg:w-[35%] lg:sticky lg:top-8">
               <ConfigPanel />
             </div>

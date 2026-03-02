@@ -23,52 +23,15 @@ const MOCK_DATA = {
     es: 'Creadores de diversas industrias están usando Nano Banana 2 para impulsar su eficiencia de producción visual.',
   } as Record<Lang, string>,
   testimonials: [
-    {
-      rating: 5,
-      avatar: 'https://i.pravatar.cc/80?img=1',
-      name: '李明',
-      role: '平面设计师',
-      comment: 'Nano Banana 2 的 4K 输出质量令人惊叹，文字渲染精准度远超预期。现在我的设计工作流提速了至少 3 倍，强烈推荐给所有创意工作者。',
-    },
-    {
-      rating: 5,
-      avatar: 'https://i.pravatar.cc/80?img=5',
-      name: '张雪',
-      role: '电商运营经理',
-      comment: '我们团队用它批量生成商品主图和广告素材，效果非常专业。多角度展示功能特别实用，节省了大量拍摄成本。',
-    },
-    {
-      rating: 4,
-      avatar: 'https://i.pravatar.cc/80?img=3',
-      name: '王浩',
-      role: '自由插画师',
-      comment: '风格一致性功能让我能快速生成系列角色设计，保持统一的视觉语言。免费版的功能已经非常强大，性价比极高。',
-    },
-    {
-      rating: 5,
-      avatar: 'https://i.pravatar.cc/80?img=8',
-      name: '陈婷',
-      role: '社交媒体编辑',
-      comment: '每天都在用 Nano Banana 2 制作社交媒体配图，生成速度很快，图片质量完全满足发布需求。提示词理解能力也很出色。',
-    },
-    {
-      rating: 5,
-      avatar: 'https://i.pravatar.cc/80?img=12',
-      name: '赵凯',
-      role: '品牌策划总监',
-      comment: '作为品牌方，我们需要高质量且风格统一的视觉素材。Nano Banana 2 完美满足了这个需求，大幅降低了设计外包成本。',
-    },
-    {
-      rating: 4,
-      avatar: 'https://i.pravatar.cc/80?img=9',
-      name: '刘芳',
-      role: '独立游戏开发者',
-      comment: '用来生成游戏概念图和场景参考非常方便，4K 分辨率的细节表现力很强。API 接入也很顺畅，已经集成到我们的工作管线中。',
-    },
+    { rating: 5, avatar: 'https://i.pravatar.cc/80?img=1', name: '李明', role: '平面设计师', comment: 'Nano Banana 2 的 4K 输出质量令人惊叹，文字渲染精准度远超预期。现在我的设计工作流提速了至少 3 倍，强烈推荐给所有创意工作者。' },
+    { rating: 5, avatar: 'https://i.pravatar.cc/80?img=5', name: '张雪', role: '电商运营经理', comment: '我们团队用它批量生成商品主图和广告素材，效果非常专业。多角度展示功能特别实用，节省了大量拍摄成本。' },
+    { rating: 4, avatar: 'https://i.pravatar.cc/80?img=3', name: '王浩', role: '自由插画师', comment: '风格一致性功能让我能快速生成系列角色设计，保持统一的视觉语言。免费版的功能已经非常强大，性价比极高。' },
+    { rating: 5, avatar: 'https://i.pravatar.cc/80?img=8', name: '陈婷', role: '社交媒体编辑', comment: '每天都在用 Nano Banana 2 制作社交媒体配图，生成速度很快，图片质量完全满足发布需求。提示词理解能力也很出色。' },
+    { rating: 5, avatar: 'https://i.pravatar.cc/80?img=12', name: '赵凯', role: '品牌策划总监', comment: '作为品牌方，我们需要高质量且风格统一的视觉素材。Nano Banana 2 完美满足了这个需求，大幅降低了设计外包成本。' },
+    { rating: 4, avatar: 'https://i.pravatar.cc/80?img=9', name: '刘芳', role: '独立游戏开发者', comment: '用来生成游戏概念图和场景参考非常方便，4K 分辨率的细节表现力很强。API 接入也很顺畅，已经集成到我们的工作管线中。' },
   ] as Testimonial[],
 };
 
-/* ── State Machine ── */
 export type TestimonialsState = 'loading' | 'success' | 'empty' | 'error';
 
 interface TestimonialsProps {
@@ -93,17 +56,17 @@ const TestimonialCard = ({ item, index }: { item: Testimonial; index: number }) 
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true, margin: '-40px' }}
     transition={{ duration: 0.4, delay: index * 0.08 }}
-    className="flex flex-col rounded-2xl border border-border bg-card p-6 transition-all duration-200 hover:-translate-y-1 hover:border-primary/30"
+    className="flex flex-col rounded-2xl border border-border bg-card p-4 sm:p-6 transition-all duration-200 hover:-translate-y-1 hover:border-primary/30"
   >
     <StarRating rating={item.rating} />
-    <p className="mt-4 flex-1 text-sm leading-relaxed text-muted-foreground">
+    <p className="mt-3 sm:mt-4 flex-1 text-xs sm:text-sm leading-relaxed text-muted-foreground">
       "{item.comment}"
     </p>
-    <div className="mt-5 flex items-center gap-3 border-t border-border pt-4">
+    <div className="mt-4 sm:mt-5 flex items-center gap-3 border-t border-border pt-3 sm:pt-4">
       <img
         src={item.avatar}
         alt={item.name}
-        className="h-10 w-10 rounded-full object-cover"
+        className="h-9 w-9 sm:h-10 sm:w-10 rounded-full object-cover"
         loading="lazy"
       />
       <div>
@@ -117,14 +80,14 @@ const TestimonialCard = ({ item, index }: { item: Testimonial; index: number }) 
 const Testimonials = ({ lang, state = 'success' }: TestimonialsProps) => {
   if (state === 'loading') {
     return (
-      <section className="py-20">
+      <section className="py-12 sm:py-20">
         <div className="container mx-auto max-w-[1280px] px-4">
-          <div className="mb-12 text-center">
+          <div className="mb-8 sm:mb-12 text-center">
             <div className="mx-auto h-10 w-1/3 animate-pulse rounded-lg bg-muted" />
           </div>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[0, 1, 2].map((i) => (
-              <div key={i} className="rounded-2xl border border-border bg-card p-6 space-y-4">
+              <div key={i} className="rounded-2xl border border-border bg-card p-4 sm:p-6 space-y-4">
                 <div className="h-4 w-24 animate-pulse rounded bg-muted" />
                 <div className="h-20 w-full animate-pulse rounded bg-muted" />
                 <div className="flex items-center gap-3 pt-4 border-t border-border">
@@ -144,7 +107,7 @@ const Testimonials = ({ lang, state = 'success' }: TestimonialsProps) => {
 
   if (state === 'error') {
     return (
-      <section className="py-20 text-center">
+      <section className="py-12 sm:py-20 text-center">
         <p className="text-destructive">Failed to load testimonials.</p>
       </section>
     );
@@ -153,24 +116,24 @@ const Testimonials = ({ lang, state = 'success' }: TestimonialsProps) => {
   if (state === 'empty') return null;
 
   return (
-    <section className="py-20">
+    <section className="py-12 sm:py-20">
       <div className="container mx-auto max-w-[1280px] px-4">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="mb-12 text-center md:mb-14"
+          className="mb-8 sm:mb-12 text-center md:mb-14"
         >
-          <h2 className="mb-4 font-display text-3xl font-extrabold text-foreground sm:text-4xl md:text-[44px] md:leading-tight">
+          <h2 className="mb-3 sm:mb-4 font-display text-2xl font-extrabold text-foreground sm:text-3xl md:text-4xl lg:text-[44px] lg:leading-tight">
             {MOCK_DATA.sectionTitle[lang]}
           </h2>
-          <p className="mx-auto max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p className="mx-auto max-w-2xl text-sm sm:text-base leading-relaxed text-muted-foreground lg:text-lg">
             {MOCK_DATA.sectionDesc[lang]}
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {MOCK_DATA.testimonials.map((item, i) => (
             <TestimonialCard key={i} item={item} index={i} />
           ))}

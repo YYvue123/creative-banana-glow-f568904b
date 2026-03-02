@@ -53,10 +53,10 @@
     --background: 240 6.7% 20.6%;
     --foreground: 0 0% 100%;
 
-    --card: 240 6.7% 20.6%;
+    --card: 240 6% 17%;
     --card-foreground: 0 0% 100%;
 
-    --popover: 240 6.7% 20.6%;
+    --popover: 240 6% 17%;
     --popover-foreground: 0 0% 100%;
 
     --primary: 240 73.9% 61%;
@@ -102,10 +102,27 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
   }
+
+  /* Global: all clickable elements get pointer cursor */
+  a, button, [role="button"], [type="button"], [type="submit"], [type="reset"],
+  label[for], summary, select, .cursor-pointer {
+    cursor: pointer;
+  }
+
+  /* Global: focus ring without shadow on inputs */
+  input:focus, textarea:focus, select:focus {
+    box-shadow: none !important;
+  }
 }
 
 @layer utilities {
   .brand-glow {
     box-shadow: inset 0 0 20px 0 hsl(350 100% 86% / 0.3);
+  }
+
+  /* Touch-friendly tap target */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
   }
 }
