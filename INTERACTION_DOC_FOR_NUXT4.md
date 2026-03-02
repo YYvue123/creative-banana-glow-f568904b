@@ -799,21 +799,87 @@ interface GenerateImageResponse {
 
 ## 八、图片资源清单
 
-| 文件名 | 用途 | 目标位置 |
-|---|---|---|
-| scene-search-1.jpg | 场景 Tab：搜索驱动 | `assets/images/` |
-| scene-multiangle-1.jpg | 场景 Tab：多角度展示 | `assets/images/` |
-| scene-text-1.jpg | 场景 Tab：文字渲染 | `assets/images/` |
-| scene-consistency-1.jpg | 场景 Tab：一致性 | `assets/images/` |
-| feat-api.jpg | 功能特性第 1 行 | `assets/images/` |
-| feat-models.jpg | 功能特性第 2 行 | `assets/images/` |
-| feat-export.jpg | 功能特性第 3 行 | `assets/images/` |
-| feat-style.jpg | 功能特性第 4 行 | `assets/images/` |
-| step-upload.jpg | 使用步骤第 1 步 | `assets/images/` |
-| step-prompt.jpg | 使用步骤第 2 步 | `assets/images/` |
-| step-generate.jpg | 使用步骤第 3 步 | `assets/images/` |
+> **下载基础路径**：`https://creative-banana-glow.lovable.app/src/assets/`
+> 所有图片均可从当前线上原型直接下载，迁移时放入 Nuxt 工程的 `assets/images/` 目录。
 
-> 所有图片均已存在于当前 React 工程的 `src/assets/` 中，迁移时复制到 Nuxt 工程的 `assets/images/` 目录即可。
+### 8.1 场景展示图片（ScenarioShowcase）
+
+| 文件名 | 用途 | 线上地址 | 目标位置 |
+|---|---|---|---|
+| scene-search-1.jpg | 场景 Tab：搜索驱动 & 趋势 | `https://creative-banana-glow.lovable.app/src/assets/scene-search-1.jpg` | `assets/images/scene-search-1.jpg` |
+| scene-search-2.jpg | 场景备用图 | `https://creative-banana-glow.lovable.app/src/assets/scene-search-2.jpg` | `assets/images/scene-search-2.jpg` |
+| scene-multiangle-1.jpg | 场景 Tab：多角度展示 | `https://creative-banana-glow.lovable.app/src/assets/scene-multiangle-1.jpg` | `assets/images/scene-multiangle-1.jpg` |
+| scene-multiangle-2.jpg | 场景备用图 | `https://creative-banana-glow.lovable.app/src/assets/scene-multiangle-2.jpg` | `assets/images/scene-multiangle-2.jpg` |
+| scene-text-1.jpg | 场景 Tab：文字渲染 & 翻译 | `https://creative-banana-glow.lovable.app/src/assets/scene-text-1.jpg` | `assets/images/scene-text-1.jpg` |
+| scene-text-2.jpg | 场景备用图 | `https://creative-banana-glow.lovable.app/src/assets/scene-text-2.jpg` | `assets/images/scene-text-2.jpg` |
+| scene-consistency-1.jpg | 场景 Tab：一致性 | `https://creative-banana-glow.lovable.app/src/assets/scene-consistency-1.jpg` | `assets/images/scene-consistency-1.jpg` |
+| scene-consistency-2.jpg | 场景备用图 | `https://creative-banana-glow.lovable.app/src/assets/scene-consistency-2.jpg` | `assets/images/scene-consistency-2.jpg` |
+
+### 8.2 功能特性图片（FeatureGrid）
+
+| 文件名 | 用途 | 线上地址 | 目标位置 |
+|---|---|---|---|
+| feat-api.jpg | 功能特性第 1 行：免费高速 4K 生成 | `https://creative-banana-glow.lovable.app/src/assets/feat-api.jpg` | `assets/images/feat-api.jpg` |
+| feat-models.jpg | 功能特性第 2 行：角色稳定性价比 | `https://creative-banana-glow.lovable.app/src/assets/feat-models.jpg` | `assets/images/feat-models.jpg` |
+| feat-export.jpg | 功能特性第 3 行：文字渲染翻译 | `https://creative-banana-glow.lovable.app/src/assets/feat-export.jpg` | `assets/images/feat-export.jpg` |
+| feat-style.jpg | 功能特性第 4 行：什么是 NB2 | `https://creative-banana-glow.lovable.app/src/assets/feat-style.jpg` | `assets/images/feat-style.jpg` |
+
+### 8.3 使用步骤图片（HowItWorks）
+
+| 文件名 | 用途 | 线上地址 | 目标位置 |
+|---|---|---|---|
+| step-upload.jpg | 第一步：上传图片 | `https://creative-banana-glow.lovable.app/src/assets/step-upload.jpg` | `assets/images/step-upload.jpg` |
+| step-prompt.jpg | 第二步：输入提示词 | `https://creative-banana-glow.lovable.app/src/assets/step-prompt.jpg` | `assets/images/step-prompt.jpg` |
+| step-generate.jpg | 第三步：生成并下载 | `https://creative-banana-glow.lovable.app/src/assets/step-generate.jpg` | `assets/images/step-generate.jpg` |
+
+### 8.4 案例展示图片（备用）
+
+| 文件名 | 用途 | 线上地址 | 目标位置 |
+|---|---|---|---|
+| case-1.jpg | 案例展示 1 | `https://creative-banana-glow.lovable.app/src/assets/case-1.jpg` | `assets/images/case-1.jpg` |
+| case-2.jpg | 案例展示 2 | `https://creative-banana-glow.lovable.app/src/assets/case-2.jpg` | `assets/images/case-2.jpg` |
+| case-3.jpg | 案例展示 3 | `https://creative-banana-glow.lovable.app/src/assets/case-3.jpg` | `assets/images/case-3.jpg` |
+| case-4.jpg | 案例展示 4 | `https://creative-banana-glow.lovable.app/src/assets/case-4.jpg` | `assets/images/case-4.jpg` |
+| case-5.jpg | 案例展示 5 | `https://creative-banana-glow.lovable.app/src/assets/case-5.jpg` | `assets/images/case-5.jpg` |
+
+### 8.5 用户头像（Testimonials）
+
+| 头像 | 线上地址 |
+|---|---|
+| 李明 | `https://i.pravatar.cc/80?img=1` |
+| 张雪 | `https://i.pravatar.cc/80?img=5` |
+| 王浩 | `https://i.pravatar.cc/80?img=3` |
+| 陈婷 | `https://i.pravatar.cc/80?img=8` |
+| 赵凯 | `https://i.pravatar.cc/80?img=12` |
+| 刘芳 | `https://i.pravatar.cc/80?img=9` |
+
+> **注意**：以上头像为第三方占位服务，正式上线前需替换为真实用户头像或本地资源。
+
+### 8.6 共计 20 个图片文件
+
+```
+assets/images/
+├── scene-search-1.jpg
+├── scene-search-2.jpg
+├── scene-multiangle-1.jpg
+├── scene-multiangle-2.jpg
+├── scene-text-1.jpg
+├── scene-text-2.jpg
+├── scene-consistency-1.jpg
+├── scene-consistency-2.jpg
+├── feat-api.jpg
+├── feat-models.jpg
+├── feat-export.jpg
+├── feat-style.jpg
+├── step-upload.jpg
+├── step-prompt.jpg
+├── step-generate.jpg
+├── case-1.jpg
+├── case-2.jpg
+├── case-3.jpg
+├── case-4.jpg
+└── case-5.jpg
+```
 
 ---
 
