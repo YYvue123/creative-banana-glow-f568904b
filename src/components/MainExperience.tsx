@@ -99,6 +99,7 @@ export const ExperienceProvider = ({ lang, children }: { lang: Lang; children: R
   const handleGenerate = useCallback(async () => {
     setUiState('generating');
     setGeneratedImage(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
     try {
       const aspectRatio = String(fieldValues['aspectRatio'] || '1:1');
