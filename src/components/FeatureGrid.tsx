@@ -28,8 +28,8 @@ interface FeatureGridProps {
 }
 
 /** @slot Navigate to generation page */
-const handleTryNow = async () => {
-  // TODO: [Navigation Squad] Connect to API by Dev
+const handleTryNow = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 const FeatureGrid = ({ lang, state = 'success' }: FeatureGridProps) => {
