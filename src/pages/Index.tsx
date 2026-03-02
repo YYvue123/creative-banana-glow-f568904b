@@ -9,7 +9,7 @@ import Testimonials from '@/components/Testimonials';
 
 
 const Index = () => {
-  const [lang, setLang] = useState<Lang>('en');
+  const [lang, setLang] = useState<Lang>('zh');
 
   return (
     <div className="min-h-screen bg-background">
