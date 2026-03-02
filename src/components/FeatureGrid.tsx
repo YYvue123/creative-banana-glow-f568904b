@@ -79,7 +79,7 @@ const FeatureGrid = ({ lang, state = 'success' }: FeatureGridProps) => {
           >
             {idx > 3 && (
               <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-accent">
-                <Icon className="h-5 w-5 text-primary-deep" />
+                <Icon className="h-5 w-5 text-primary" />
               </div>
             )}
             <h3 className="mb-3 font-display text-2xl font-bold text-foreground sm:text-3xl">
