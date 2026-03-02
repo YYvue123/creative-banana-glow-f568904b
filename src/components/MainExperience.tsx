@@ -56,21 +56,21 @@ const ExperienceContext = createContext<ExperienceState | null>(null);
 
 export const ExperienceProvider = ({ lang, children }: { lang: Lang; children: React.ReactNode }) => {
   const [selectedModelId, setSelectedModelIdRaw] = useState(modelConfigs[0].id);
-  const setSelectedModelId = (id: string) => {
-    setSelectedModelIdRaw(id);
+  const setSelectedModelId = useCallback((id: string) => {
     const model = modelConfigs.find((m) => m.id === id);
-    if (model) {
-      const defaults: Record<string, string | number> = {};
-      model.fields.forEach((field) => {
-        if (field.default !== undefined) {
-          defaults[field.labelKey] = field.default;
-        } else if (field.options?.length) {
-          defaults[field.labelKey] = field.options[0];
-        }
-      });
-      setFieldValues(defaults);
-    }
-  };
+    if (!model) return;
+    const defaults: Record<string, string | number> = {};
+    model.fields.forEach((field) => {
+      if (field.default !== undefined) {
+        defaults[field.labelKey] = field.default;
+      } else if (field.options?.length) {
+        defaults[field.labelKey] = field.options[0];
+      }
+    });
+    // Batch both updates together to avoid intermediate render flash
+    setFieldValues(defaults);
+    setSelectedModelIdRaw(id);
+  }, []);
   const [refImage, setRefImage] = useState<string | null>(null);
   const [prompt, setPrompt] = useState('');
   const [fieldValues, setFieldValues] = useState<Record<string, string | number>>({});
