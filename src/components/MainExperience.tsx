@@ -183,8 +183,7 @@ export const ConfigPanel = () => {
       initial={{ opacity: 0, x: -20 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      className="flex flex-col rounded-xl border border-border bg-card shadow-sm overflow-hidden"
-      style={{ maxHeight: 'calc(100dvh - 6rem)' }}
+      className="flex flex-col rounded-xl border border-border bg-card shadow-sm overflow-hidden h-full"
     >
       <div
         ref={scrollContainerRef}
