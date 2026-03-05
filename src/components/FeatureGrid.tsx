@@ -1,4 +1,4 @@
-import { Lang, featureLocales, locales } from '@/lib/locales';
+import { featureLocales, locales } from '@/lib/locales';
 import { motion } from 'framer-motion';
 import { Plug, Layers, Download, Paintbrush } from 'lucide-react';
 
@@ -9,7 +9,6 @@ import featStyle from '@/assets/feat-style.jpg';
 
 const iconMap: Record<string, React.ElementType> = { Plug, Layers, Download, Paintbrush };
 
-/* ── MOCK DATA ── */
 const MOCK_DATA = {
   rows: [
     { icon: 'Plug', nameKey: 'feat_api', descKey: 'feat_api_desc', image: featApi, alt: 'Nano Banana 2 API integration workflow dashboard' },
@@ -19,11 +18,9 @@ const MOCK_DATA = {
   ],
 };
 
-/* ── State Machine ── */
 export type FeatureGridState = 'loading' | 'success' | 'empty' | 'error';
 
 interface FeatureGridProps {
-  lang: Lang;
   state?: FeatureGridState;
 }
 
@@ -32,7 +29,7 @@ const handleTryNow = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-const FeatureGrid = ({ lang, state = 'success' }: FeatureGridProps) => {
+const FeatureGrid = ({ state = 'success' }: FeatureGridProps) => {
   if (state === 'loading') {
     return (
       <section className="container mx-auto space-y-12 sm:space-y-20 px-4 py-12 sm:py-20">
@@ -82,17 +79,17 @@ const FeatureGrid = ({ lang, state = 'success' }: FeatureGridProps) => {
               </div>
             )}
             <h3 className="mb-3 font-display text-xl font-bold text-foreground sm:text-2xl lg:text-3xl">
-              {featureLocales[row.nameKey][lang]}
+              {featureLocales[row.nameKey]}
             </h3>
             <p className="mb-6 max-w-md text-sm sm:text-base leading-relaxed text-muted-foreground">
-              {featureLocales[row.descKey][lang]}
+              {featureLocales[row.descKey]}
             </p>
             <div>
               <button
                 onClick={handleTryNow}
                 className="rounded-full bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/90 active:bg-primary/80 active:scale-95"
               >
-                {locales.generateNow[lang]}
+                {locales.generateNow}
               </button>
             </div>
           </motion.div>

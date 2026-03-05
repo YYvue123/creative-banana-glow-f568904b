@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import { Star } from 'lucide-react';
-import { Lang } from '@/lib/locales';
 
 /* ── MOCK DATA ── */
 interface Testimonial {
@@ -12,16 +11,8 @@ interface Testimonial {
 }
 
 const MOCK_DATA = {
-  sectionTitle: {
-    en: 'What Users Say', zh: '用户怎么说', ko: '사용자 후기', ja: 'ユーザーの声', es: 'Lo que dicen los usuarios',
-  } as Record<Lang, string>,
-  sectionDesc: {
-    en: 'Creators from various industries are using Nano Banana 2 to boost their visual production efficiency.',
-    zh: '来自不同行业的创作者正在使用 Nano Banana 2 提升他们的视觉创作效率',
-    ko: '다양한 산업의 크리에이터들이 Nano Banana 2로 시각 제작 효율을 높이고 있습니다.',
-    ja: '様々な業界のクリエイターがNano Banana 2でビジュアル制作効率を向上させています。',
-    es: 'Creadores de diversas industrias están usando Nano Banana 2 para impulsar su eficiencia de producción visual.',
-  } as Record<Lang, string>,
+  sectionTitle: '用户怎么说',
+  sectionDesc: '来自不同行业的创作者正在使用 Nano Banana 2 提升他们的视觉创作效率',
   testimonials: [
     { rating: 5, avatar: 'https://i.pravatar.cc/80?img=1', name: '李明', role: '平面设计师', comment: 'Nano Banana 2 的 4K 输出质量令人惊叹，文字渲染精准度远超预期。现在我的设计工作流提速了至少 3 倍，强烈推荐给所有创意工作者。' },
     { rating: 5, avatar: 'https://i.pravatar.cc/80?img=5', name: '张雪', role: '电商运营经理', comment: '我们团队用它批量生成商品主图和广告素材，效果非常专业。多角度展示功能特别实用，节省了大量拍摄成本。' },
@@ -35,7 +26,6 @@ const MOCK_DATA = {
 export type TestimonialsState = 'loading' | 'success' | 'empty' | 'error';
 
 interface TestimonialsProps {
-  lang: Lang;
   state?: TestimonialsState;
 }
 
@@ -77,7 +67,7 @@ const TestimonialCard = ({ item, index }: { item: Testimonial; index: number }) 
   </motion.div>
 );
 
-const Testimonials = ({ lang, state = 'success' }: TestimonialsProps) => {
+const Testimonials = ({ state = 'success' }: TestimonialsProps) => {
   if (state === 'loading') {
     return (
       <section className="py-12 sm:py-20">
@@ -126,10 +116,10 @@ const Testimonials = ({ lang, state = 'success' }: TestimonialsProps) => {
           className="mb-8 sm:mb-12 text-center md:mb-14"
         >
           <h2 className="mb-3 sm:mb-4 font-display text-2xl font-extrabold text-foreground sm:text-3xl md:text-4xl lg:text-[44px] lg:leading-tight">
-            {MOCK_DATA.sectionTitle[lang]}
+            {MOCK_DATA.sectionTitle}
           </h2>
           <p className="mx-auto max-w-2xl text-sm sm:text-base leading-relaxed text-muted-foreground lg:text-lg">
-            {MOCK_DATA.sectionDesc[lang]}
+            {MOCK_DATA.sectionDesc}
           </p>
         </motion.div>
 

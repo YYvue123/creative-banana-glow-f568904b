@@ -1,21 +1,13 @@
-import { Lang, locales, faqData, faqLocales } from '@/lib/locales';
+import { locales, faqData } from '@/lib/locales';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
-/* ── MOCK DATA ── */
-const MOCK_DATA = {
-  /** FAQ items sourced from locales — replace with API response */
-  items: faqData,
-};
-
-/* ── State Machine ── */
 export type FAQState = 'loading' | 'success' | 'empty' | 'error';
 
 interface FAQSectionProps {
-  lang: Lang;
   state?: FAQState;
 }
 
-const FAQSection = ({ lang, state = 'success' }: FAQSectionProps) => {
+const FAQSection = ({ state = 'success' }: FAQSectionProps) => {
   if (state === 'loading') {
     return (
       <section className="container mx-auto px-4 py-16">
@@ -41,15 +33,15 @@ const FAQSection = ({ lang, state = 'success' }: FAQSectionProps) => {
 
   return (
     <section className="container mx-auto px-4 py-16">
-      <h2 className="mb-8 text-center font-display text-2xl font-bold text-foreground">{locales.faqTitle[lang]}</h2>
+      <h2 className="mb-8 text-center font-display text-2xl font-bold text-foreground">{locales.faqTitle}</h2>
       <Accordion type="single" collapsible className="mx-auto max-w-3xl">
-        {MOCK_DATA.items.map((item, idx) => (
+        {faqData.map((item, idx) => (
           <AccordionItem key={idx} value={`faq-${idx}`}>
             <AccordionTrigger className="text-left font-body text-sm font-medium text-foreground">
-              {faqLocales[item.qKey][lang]}
+              {item.q}
             </AccordionTrigger>
             <AccordionContent className="text-sm text-muted-foreground">
-              {faqLocales[item.aKey][lang]}
+              {item.a}
             </AccordionContent>
           </AccordionItem>
         ))}
