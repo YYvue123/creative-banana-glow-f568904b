@@ -12,8 +12,7 @@
 3. [待接入 API 插槽](#待接入-api-插槽)
 4. [Edge Function（已接入）](#edge-function已接入)
 5. [状态机规范](#状态机规范)
-6. [i18n 数据源](#i18n-数据源)
-7. [快速替换指南](#快速替换指南)
+6. [快速替换指南](#快速替换指南)
 
 ---
 
@@ -30,7 +29,7 @@ Every component follows this structure:
 
 To switch a component's state, pass the `state` prop:
 ```tsx
-<HeroSection lang="zh" state="loading" />
+<HeroSection state="loading" />
 ```
 
 ---
@@ -43,10 +42,8 @@ To switch a component's state, pass the `state` prop:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `MOCK_DATA.title(lang)` | `string` | Hero H1 主标题 |
-| `MOCK_DATA.subtitle(lang)` | `string` | Hero H2 副标题 |
-
-**数据来源**：`src/lib/locales.ts` → `heroTitle` / `heroSubtitle`
+| `MOCK_DATA.title` | `string` | Hero H1 主标题 |
+| `MOCK_DATA.subtitle` | `string` | Hero H2 副标题 |
 
 ---
 
@@ -62,9 +59,7 @@ To switch a component's state, pass the `state` prop:
 | 数据 | 说明 |
 |------|------|
 | `modelConfigs: ModelConfig[]` | 模型列表，含 id、字段配置（upload/radio/select）、默认值 |
-| `modelLocales` | 模型名称 & 描述的多语言文案 |
 | `scenarios: Scenario[]` | 场景 Tab 列表（search / multiangle / text / consistency） |
-| `scenarioLocales` | 场景名称、图片 alt、示例 prompt 的多语言文案 |
 
 ---
 
@@ -72,9 +67,7 @@ To switch a component's state, pass the `state` prop:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `MOCK_DATA.rows[]` | `Array<{ icon, nameKey, descKey, image, alt }>` | 功能特性卡片（4 项） |
-
-**数据来源**：`featureLocales`（`src/lib/locales.ts`）提供多语言名称和描述。
+| `MOCK_DATA.rows[]` | `Array<{ icon, name, desc, image, alt }>` | 功能特性卡片（4 项） |
 
 ---
 
@@ -82,10 +75,9 @@ To switch a component's state, pass the `state` prop:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `MOCK_DATA.sectionTitle` | `Record<Lang, string>` | 区块标题（多语言） |
-| `MOCK_DATA.sectionDesc` | `Record<Lang, string>` | 区块描述（多语言） |
-| `MOCK_DATA.steps[]` | `Array<{ image, titleKey, descKey }>` | 3 个步骤卡片 |
-| `MOCK_DATA.stepLocales` | `Record<string, Record<Lang, string>>` | 步骤标题和描述的多语言文案 |
+| `MOCK_DATA.sectionTitle` | `string` | 区块标题 |
+| `MOCK_DATA.sectionDesc` | `string` | 区块描述 |
+| `MOCK_DATA.steps[]` | `Array<{ image, title, desc }>` | 3 个步骤卡片 |
 
 ---
 
@@ -93,8 +85,8 @@ To switch a component's state, pass the `state` prop:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `MOCK_DATA.sectionTitle` | `Record<Lang, string>` | 区块标题 |
-| `MOCK_DATA.sectionDesc` | `Record<Lang, string>` | 区块描述 |
+| `MOCK_DATA.sectionTitle` | `string` | 区块标题 |
+| `MOCK_DATA.sectionDesc` | `string` | 区块描述 |
 | `MOCK_DATA.testimonials[]` | `Array<{ rating, avatar, name, role, comment }>` | 6 条用户评价 |
 
 > ⚠️ 头像使用 `i.pravatar.cc` 占位图，上线前需替换为真实用户头像或 CDN 资源。
@@ -105,9 +97,7 @@ To switch a component's state, pass the `state` prop:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `MOCK_DATA.items[]` | `Array<{ qKey, aKey }>` | FAQ 条目，引用 `faqLocales` 多语言文案 |
-
-**数据来源**：`src/lib/locales.ts` → `faqData` + `faqLocales`
+| `MOCK_DATA.items[]` | `Array<{ q, a }>` | FAQ 问答条目 |
 
 ---
 
@@ -117,9 +107,9 @@ To switch a component's state, pass the `state` prop:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `MOCK_DATA.title(lang)` | `string` | Footer 标题 |
-| `MOCK_DATA.desc(lang)` | `string` | Footer 描述 |
-| `MOCK_DATA.ctaLabel(lang)` | `string` | 联系按钮文案 |
+| `MOCK_DATA.title` | `string` | Footer 标题 |
+| `MOCK_DATA.desc` | `string` | Footer 描述 |
+| `MOCK_DATA.ctaLabel` | `string` | 联系按钮文案 |
 | `MOCK_DATA.copyright` | `string` | 版权信息 `© 2026 Nano Banana 2` |
 
 ---
@@ -186,22 +176,6 @@ To switch a component's state, pass the `state` prop:
 | `'generating'` | 预览区显示加载动画 |
 | `'success'` | 显示生成的图片（支持放大、下载、复制） |
 | `'error'` | 显示失败兜底 UI + 重试按钮 |
-
----
-
-## i18n 数据源
-
-所有多语言字符串集中在 `src/lib/locales.ts`：
-
-| 导出 | 说明 |
-|------|------|
-| `locales` | 通用 UI 文案（按钮、标签、占位符等） |
-| `featureLocales` | 功能特性名称 & 描述 |
-| `faqData` + `faqLocales` | FAQ 问答对 |
-| `modelConfigs` + `modelLocales` | 模型配置 & 名称描述 |
-| `scenarios` + `scenarioLocales` | 场景 Tab 标签 & 示例 prompt |
-
-**支持语言**：`zh`（简体中文）| `en` | `ko` | `ja` | `es`
 
 ---
 
