@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback, createContext, useContext } from 'react';
-import { Lang, locales, modelConfigs, modelLocales, scenarios, scenarioLocales, type ModelConfig } from '@/lib/locales';
+import { locales, modelConfigs, scenarios, type ModelConfig } from '@/lib/locales';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -49,12 +49,11 @@ interface ExperienceState {
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   fileInputRef: React.RefObject<HTMLInputElement>;
   currentModel: ModelConfig;
-  lang: Lang;
 }
 
 const ExperienceContext = createContext<ExperienceState | null>(null);
 
-export const ExperienceProvider = ({ lang, children }: { lang: Lang; children: React.ReactNode }) => {
+export const ExperienceProvider = ({ children }: { children: React.ReactNode }) => {
   const [selectedModelId, setSelectedModelIdRaw] = useState(modelConfigs[0].id);
   const setSelectedModelId = useCallback((id: string) => {
     const model = modelConfigs.find((m) => m.id === id);
@@ -67,7 +66,6 @@ export const ExperienceProvider = ({ lang, children }: { lang: Lang; children: R
         defaults[field.labelKey] = field.options[0];
       }
     });
-    // Batch both updates together to avoid intermediate render flash
     setFieldValues(defaults);
     setSelectedModelIdRaw(id);
   }, []);
@@ -105,9 +103,12 @@ export const ExperienceProvider = ({ lang, children }: { lang: Lang; children: R
       const aspectRatio = String(fieldValues['aspectRatio'] || '1:1');
       const resolution = String(fieldValues['resolution'] || '2K');
 
+      const activeScenario = scenarios.find((s) => s.id === activeTab);
+      const defaultPrompt = activeScenario?.images[0]?.prompt || 'Generate a beautiful 4K image';
+
       const { data, error } = await supabase.functions.invoke('generate-image', {
         body: {
-          prompt: prompt || scenarioLocales[`scene_${activeTab}_1_prompt`]?.zh || 'Generate a beautiful 4K image',
+          prompt: prompt || defaultPrompt,
           refImage: refImage,
           aspectRatio,
           resolution,
@@ -142,7 +143,7 @@ export const ExperienceProvider = ({ lang, children }: { lang: Lang; children: R
       selectedModelId, setSelectedModelId, refImage, setRefImage, prompt, setPrompt,
       fieldValues, setFieldValue, getFieldValue, uiState, generatedImage,
       activeTab, handleTabChange, handleGenerate, handleFileUpload, handleFileChange,
-      fileInputRef, currentModel, lang,
+      fileInputRef, currentModel,
     }}>
       {children}
     </ExperienceContext.Provider>
@@ -158,7 +159,7 @@ const useExperience = () => {
 /* ── Config Panel (left side) ── */
 export const ConfigPanel = () => {
   const {
-    lang, selectedModelId, setSelectedModelId, currentModel, refImage, setRefImage,
+    selectedModelId, setSelectedModelId, currentModel, refImage, setRefImage,
     getFieldValue, setFieldValue, prompt, setPrompt, uiState, handleGenerate,
     handleFileUpload, handleFileChange, fileInputRef,
   } = useExperience();
@@ -194,18 +195,18 @@ export const ConfigPanel = () => {
         {/* Model Selector */}
         <div>
           <label className="mb-1.5 block text-sm font-medium text-foreground">
-            {locales.modelLabel[lang]}
+            {locales.modelLabel}
           </label>
           <Select value={selectedModelId} onValueChange={setSelectedModelId}>
             <SelectTrigger className="w-full border-border bg-background hover:border-primary/50 transition-colors">
-              <span className="truncate">{modelLocales[currentModel.nameKey][lang]}</span>
+              <span className="truncate">{currentModel.name}</span>
             </SelectTrigger>
             <SelectContent align="start">
               {modelConfigs.map((m) => (
                 <SelectItem key={m.id} value={m.id} className="items-start">
                   <div className="flex flex-col items-start text-left">
-                    <span className="font-medium">{modelLocales[m.nameKey][lang]}</span>
-                    <span className="text-xs text-muted-foreground">{modelLocales[m.descKey][lang]}</span>
+                    <span className="font-medium">{m.name}</span>
+                    <span className="text-xs text-muted-foreground">{m.desc}</span>
                   </div>
                 </SelectItem>
               ))}
@@ -219,7 +220,7 @@ export const ConfigPanel = () => {
             return (
               <div key={field.labelKey} onClick={handleFieldFocus}>
                 <label className="mb-1.5 block text-sm font-medium text-foreground">
-                  {locales[field.labelKey]?.[lang] || field.labelKey}
+                  {(locales as Record<string, string>)[field.labelKey] || field.labelKey}
                 </label>
                 <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
                 <div
@@ -240,7 +241,7 @@ export const ConfigPanel = () => {
                   ) : (
                     <div className="flex flex-col items-center gap-2 text-muted-foreground">
                       <Upload className="h-6 w-6" />
-                      <span className="text-xs">{locales.uploadOrSelect[lang]}</span>
+                      <span className="text-xs">{locales.uploadOrSelect}</span>
                     </div>
                   )}
                 </div>
@@ -252,7 +253,7 @@ export const ConfigPanel = () => {
             return (
               <div key={field.labelKey} onClick={handleFieldFocus}>
                 <label className="mb-1.5 block text-sm font-medium text-foreground">
-                  {locales[field.labelKey]?.[lang] || field.labelKey}
+                  {(locales as Record<string, string>)[field.labelKey] || field.labelKey}
                 </label>
                 <RadioGroup
                   value={String(getFieldValue(field.labelKey, field.default))}
@@ -281,7 +282,7 @@ export const ConfigPanel = () => {
             return (
               <div key={field.labelKey} onClick={handleFieldFocus}>
                 <label className="mb-1.5 block text-sm font-medium text-foreground">
-                  {locales[field.labelKey]?.[lang] || field.labelKey}
+                  {(locales as Record<string, string>)[field.labelKey] || field.labelKey}
                 </label>
                 <Select
                   value={String(getFieldValue(field.labelKey, field.default))}
@@ -305,13 +306,13 @@ export const ConfigPanel = () => {
 
         {/* Prompt */}
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-foreground">{locales.prompt[lang]}</label>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">{locales.prompt}</label>
           <Textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             rows={4}
             className="resize-none border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-ring focus:border-primary/50"
-            placeholder={locales.promptPlaceholder[lang]}
+            placeholder={locales.promptPlaceholder}
           />
         </div>
       </div>
@@ -324,7 +325,7 @@ export const ConfigPanel = () => {
           disabled={isGenerating}
         >
           {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
-          {isGenerating ? locales.generating[lang] : locales.generate[lang]}
+          {isGenerating ? locales.generating : locales.generate}
         </Button>
       </div>
     </motion.div>
@@ -333,7 +334,7 @@ export const ConfigPanel = () => {
 
 /* ── Scenario Showcase (right side) ── */
 export const ScenarioShowcase = () => {
-  const { lang, activeTab, handleTabChange, uiState, generatedImage, fieldValues, handleGenerate } = useExperience();
+  const { activeTab, handleTabChange, uiState, generatedImage, fieldValues, handleGenerate } = useExperience();
   const [showLightbox, setShowLightbox] = useState(false);
 
   const isGenerating = uiState === 'generating';
@@ -364,9 +365,9 @@ export const ScenarioShowcase = () => {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      toast.success(lang === 'zh' ? '下载成功' : 'Download successful');
+      toast.success('下载成功');
     } catch {
-      toast.error(lang === 'zh' ? '下载失败' : 'Download failed');
+      toast.error('下载失败');
     }
   };
 
@@ -389,10 +390,10 @@ export const ScenarioShowcase = () => {
         canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('toBlob failed'))), 'image/png');
       });
       await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-      toast.success(lang === 'zh' ? '复制成功' : 'Copied to clipboard');
+      toast.success('复制成功');
     } catch (err) {
       console.error('Copy failed:', err);
-      toast.error(lang === 'zh' ? '复制失败' : 'Copy failed');
+      toast.error('复制失败');
     }
   };
 
@@ -413,7 +414,7 @@ export const ScenarioShowcase = () => {
                   value={s.id}
                   className="flex-1 whitespace-nowrap text-xs sm:text-sm py-2.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground hover:bg-accent transition-colors"
                 >
-                  {scenarioLocales[s.nameKey][lang]}
+                  {s.name}
                 </TabsTrigger>
               ))}
             </TabsList>
@@ -422,7 +423,7 @@ export const ScenarioShowcase = () => {
 
         {scenarios.map((s) => {
           const imgSrc = MOCK_DATA.scenarioImageMap[s.id];
-          const altText = scenarioLocales[s.images[0]?.altKey]?.[lang] || '';
+          const altText = s.images[0]?.alt || '';
           return (
             <TabsContent key={s.id} value={s.id} className="mt-0">
               <div
@@ -452,7 +453,7 @@ export const ScenarioShowcase = () => {
                       <div className="relative z-10 flex flex-col items-center gap-3">
                         <Loader2 className="h-10 w-10 animate-spin text-primary" />
                         <span className="text-sm font-medium text-muted-foreground">
-                          {locales.generating[lang]}
+                          {locales.generating}
                         </span>
                       </div>
                     </motion.div>
@@ -474,21 +475,21 @@ export const ScenarioShowcase = () => {
                           <button
                             onClick={() => setShowLightbox(true)}
                             className="rounded-md p-2.5 sm:p-2 text-background hover:bg-foreground/20 active:bg-foreground/30 transition-colors touch-target"
-                            title={lang === 'zh' ? '放大查看' : 'Zoom in'}
+                            title="放大查看"
                           >
                             <ZoomIn className="h-5 w-5" />
                           </button>
                           <button
                             onClick={handleDownload}
                             className="rounded-md p-2.5 sm:p-2 text-background hover:bg-foreground/20 active:bg-foreground/30 transition-colors touch-target"
-                            title={lang === 'zh' ? '下载' : 'Download'}
+                            title="下载"
                           >
                             <Download className="h-5 w-5" />
                           </button>
                           <button
                             onClick={handleCopy}
                             className="rounded-md p-2.5 sm:p-2 text-background hover:bg-foreground/20 active:bg-foreground/30 transition-colors touch-target"
-                            title={lang === 'zh' ? '复制' : 'Copy'}
+                            title="复制"
                           >
                             <Copy className="h-5 w-5" />
                           </button>
@@ -505,7 +506,7 @@ export const ScenarioShowcase = () => {
                     >
                       <AlertTriangle className="h-12 w-12 text-destructive" />
                       <p className="text-sm font-medium text-muted-foreground text-center px-6">
-                        {lang === 'zh' ? '生成失败，请重试' : 'Generation failed, please retry'}
+                        生成失败，请重试
                       </p>
                       <Button
                         variant="outline"
@@ -514,7 +515,7 @@ export const ScenarioShowcase = () => {
                         className="gap-2 hover:bg-accent active:bg-accent/80"
                       >
                         <RefreshCw className="h-4 w-4" />
-                        {lang === 'zh' ? '重试' : 'Retry'}
+                        重试
                       </Button>
                     </motion.div>
                   ) : (
@@ -571,8 +572,8 @@ export const ScenarioShowcase = () => {
 };
 
 /* ── Default export kept for backward compat ── */
-const MainExperience = ({ lang }: { lang: Lang }) => (
-  <ExperienceProvider lang={lang}>
+const MainExperience = () => (
+  <ExperienceProvider>
     <section className="container mx-auto px-4 pb-16">
       <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
         <div className="w-full lg:w-[35%]">

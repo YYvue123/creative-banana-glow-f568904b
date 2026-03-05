@@ -1,19 +1,13 @@
-import { Lang, locales } from '@/lib/locales';
+import { locales } from '@/lib/locales';
 import { motion } from 'framer-motion';
-
-const MOCK_DATA = {
-  title: (lang: Lang) => locales.heroTitle[lang],
-  subtitle: (lang: Lang) => locales.heroSubtitle[lang],
-};
 
 export type HeroState = 'loading' | 'success' | 'empty' | 'error';
 
 interface HeroSectionProps {
-  lang: Lang;
   state?: HeroState;
 }
 
-const HeroSection = ({ lang, state = 'success' }: HeroSectionProps) => {
+const HeroSection = ({ state = 'success' }: HeroSectionProps) => {
   if (state === 'loading') {
     return (
       <section className="text-center" style={{ paddingBottom: 'clamp(0.5rem, 1vh, 1.5rem)' }}>
@@ -41,7 +35,7 @@ const HeroSection = ({ lang, state = 'success' }: HeroSectionProps) => {
         transition={{ duration: 0.6 }}
         className="mx-auto max-w-4xl font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl lg:text-5xl"
       >
-        {MOCK_DATA.title(lang)}
+        {locales.heroTitle}
       </motion.h1>
       <motion.h2
         initial={{ opacity: 0, y: 20 }}
@@ -50,7 +44,7 @@ const HeroSection = ({ lang, state = 'success' }: HeroSectionProps) => {
         className="mx-auto max-w-2xl font-body text-sm font-light text-muted-foreground sm:text-base lg:text-lg"
         style={{ marginTop: 'clamp(0.5rem, 1vh, 1.25rem)' }}
       >
-        {MOCK_DATA.subtitle(lang)}
+        {locales.heroSubtitle}
       </motion.h2>
     </section>
   );
